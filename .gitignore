@@ -1,0 +1,9 @@
+#only  push Resouces and Class:
+proj.android
+proj.ios_mac
+proj.win32
+.cocos-project.json
+BangBangGame.ccs
+BangBangGame.cfg
+BangBangGame.udf
+config.json
