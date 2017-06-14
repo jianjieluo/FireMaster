@@ -16,7 +16,9 @@ public:
 private:
 	Size visibleSize;
 	Vec2 origin;
-
+	Sprite *yellowTank, *blueTank;
+	Sprite *obstacle;
+	Sprite *topUI;
 	void addSprite();
 };
 

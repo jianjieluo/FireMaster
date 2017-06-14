@@ -41,6 +41,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     FileUtils::getInstance()->addSearchPath("res");
 
+	//load game resource
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
+	char frameName[30];
+	//Ì¹¿Ë¶¯»­
+	Animation* yellowTankAttackAnimation = Animation::create();
+	Animation* blueTankAttackAnimation = Animation::create();
+	for (int i = 1; i <= 4; i++) {
+		sprintf(frameName, "yellowAttack%d.png", i);
+		yellowTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+		sprintf(frameName, "blueAttack%d.png", i);
+		blueTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+	}
+	yellowTankAttackAnimation->setDelayPerUnit(0.1);
+	blueTankAttackAnimation->setDelayPerUnit(0.1);
+	AnimationCache::getInstance()->addAnimation(yellowTankAttackAnimation, "yellowTankAttackAnimation");
+	AnimationCache::getInstance()->addAnimation(blueTankAttackAnimation, "blueTankAttackAnimation");
+
     // create a scene. it's an autorelease object
     auto scene = initScene::createScene();
 
