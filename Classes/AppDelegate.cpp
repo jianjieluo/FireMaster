@@ -88,6 +88,7 @@ void AppDelegate::loadGameResource() {
 	SimpleAudioEngine::getInstance()->preloadEffect("music/click.wav");
 	SimpleAudioEngine::getInstance()->preloadEffect("music/explosion.wav");
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("music/bgm.mp3");
+	
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
