@@ -1,5 +1,7 @@
 #include "AppDelegate.h"
 #include "initScene.h"
+#include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
 
 USING_NS_CC;
 
@@ -42,6 +44,19 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->addSearchPath("res");
 
 	//load game resource
+	loadGameResource();
+
+    // create a scene. it's an autorelease object
+    auto scene = initScene::createScene();
+
+    // run
+    director->runWithScene(scene);
+
+    return true;
+}
+
+void AppDelegate::loadGameResource() {
+	//¶¯»­
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
 	char frameName[30];
 	//Ì¹¿Ë¶¯»­
@@ -53,18 +68,26 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		sprintf(frameName, "blueAttack%d.png", i);
 		blueTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
 	}
-	yellowTankAttackAnimation->setDelayPerUnit(0.1);
-	blueTankAttackAnimation->setDelayPerUnit(0.1);
+	yellowTankAttackAnimation->setDelayPerUnit(0.02);
+	blueTankAttackAnimation->setDelayPerUnit(0.02);
 	AnimationCache::getInstance()->addAnimation(yellowTankAttackAnimation, "yellowTankAttackAnimation");
 	AnimationCache::getInstance()->addAnimation(blueTankAttackAnimation, "blueTankAttackAnimation");
 
-    // create a scene. it's an autorelease object
-    auto scene = initScene::createScene();
+	//±¬Õ¨¶¯»­
+	Animation* explosionAnimation = Animation::create();
+	for (int i = 1; i <= 4; i++) {
+		sprintf(frameName, "explosion%d.png", i);
+		explosionAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+	}
+	explosionAnimation->setDelayPerUnit(0.02);
+	AnimationCache::getInstance()->addAnimation(explosionAnimation, "explosionAnimation");
 
-    // run
-    director->runWithScene(scene);
-
-    return true;
+	
+	//ÒôÀÖ
+	SimpleAudioEngine::getInstance()->preloadEffect("music/attack.wav");
+	SimpleAudioEngine::getInstance()->preloadEffect("music/click.wav");
+	SimpleAudioEngine::getInstance()->preloadEffect("music/explosion.wav");
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("music/bgm.mp3");
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too

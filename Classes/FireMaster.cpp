@@ -50,6 +50,14 @@ void FireMaster::addSprite() {
 	yellowTank->runAction(RepeatForever::create(yTankAttackAnimate));
 	this->addChild(yellowTank, 1);
 
+	//explosion动画展示，到时候删
+	auto explosion = Sprite::createWithSpriteFrameName("explosion1.png");
+	explosion->setAnchorPoint(Point(0.5, 0.5));
+	explosion->setPosition(visibleSize.width/2, visibleSize.height/2);
+	auto explosionAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation"));
+	explosion->runAction(RepeatForever::create(explosionAnimate));
+	this->addChild(explosion, 1);
+
 	//add blue tank
 	blueTank = Sprite::createWithSpriteFrameName("blueAttack1.png");
 	blueTank->setAnchorPoint(Point(0.5, 0.5));
@@ -72,5 +80,4 @@ void FireMaster::addSprite() {
 	this->addChild(topUI, 1);
 
 }
-
 

@@ -2,7 +2,9 @@
 #include "FireMaster.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+#include "SimpleAudioEngine.h"
 
+using namespace CocosDenshion;
 USING_NS_CC;
 
 using namespace ui;
@@ -45,10 +47,14 @@ bool initScene::init()
 	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height /2));
 	startBtn->addTouchEventListener(CC_CALLBACK_1(initScene::StartBtn_click, this));
 	this->addChild(startBtn, 1);
-
+	
+	//play bgm
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bgm.mp3", true);
+	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0);
     return true;
 }
 
 void initScene::StartBtn_click(Ref * sender) {
 	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.1f, FireMaster::createScene()));
+	SimpleAudioEngine::getInstance()->playEffect("click.wav",false);
 }
