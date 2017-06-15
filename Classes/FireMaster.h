@@ -20,6 +20,15 @@ private:
 	Sprite *obstacle;
 	Sprite *topUI;
 	void addSprite();
+	void tank_bullet4_1_click(Ref * sender);
+	void tanks_crateRepair_1_click(Ref * sender);
+	void tanks_crateArmor_1_click(Ref * sender);
+	void tanks_crateAmmo_1_click(Ref * sender);
+	
+	void tank_bullet4_2_click(Ref * sender);
+	void tanks_crateRepair_2_click(Ref * sender);
+	void tanks_crateArmor_2_click(Ref * sender);
+	void tanks_crateAmmo_2_click(Ref * sender);
 };
 
 #endif // __FIRE_MASTER_H__

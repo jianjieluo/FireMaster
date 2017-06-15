@@ -49,8 +49,9 @@ bool initScene::init()
 	this->addChild(startBtn, 1);
 	
 	//play bgm
+	
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bgm.mp3", true);
-	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0);
+	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5f);
     return true;
 }
 
