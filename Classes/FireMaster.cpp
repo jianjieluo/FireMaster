@@ -1,6 +1,9 @@
 #include "cocos2d.h"
 #include "FireMaster.h"
-#include "ui/CocosGUI.h"
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
+
 using namespace ui;
 Scene* FireMaster::createScene() {
 	// 'scene' is an autorelease object
@@ -80,96 +83,94 @@ void FireMaster::addSprite() {
 	topUI->setScale(1.4, 1.3);
 	this->addChild(topUI, 1);
 
-	//add tank_bullet4_1
-    auto tank_bullet4_1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
-	tank_bullet4_1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
-	tank_bullet4_1->addTouchEventListener(CC_CALLBACK_1(FireMaster::tank_bullet4_1_click, this));
-	this->addChild(tank_bullet4_1, 1);
+	//add powerBullet_Btn1
+	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
+	powerBullet_Btn1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
+	powerBullet_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
+	this->addChild(powerBullet_Btn1, 1);
 
-	//add tanks_crateRepair_1
-	auto tanks_crateRepair_1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
-	tanks_crateRepair_1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
-	tanks_crateRepair_1->setScale(0.5);
-	tanks_crateRepair_1->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateRepair_1_click, this));
-	this->addChild(tanks_crateRepair_1, 1);
+	//add fix_Btn1
+	fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+	fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
+	fix_Btn1->setScale(0.5);
+	fix_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
+	this->addChild(fix_Btn1, 1);
 
-	//add tanks_crateArmor_1
-	auto tanks_crateArmor_1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
-	tanks_crateArmor_1->setPosition(Vec2(visibleSize.width * 25 / 96 , visibleSize.height * 8.1 / 10));
-	tanks_crateArmor_1->setScale(0.5);
-	tanks_crateArmor_1->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateArmor_1_click, this));
-	this->addChild(tanks_crateArmor_1, 1);
+	//add defence_Btn1
+	defence_Btn1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+	defence_Btn1->setPosition(Vec2(visibleSize.width * 25 / 96 , visibleSize.height * 8.1 / 10));
+	defence_Btn1->setScale(0.5);
+	defence_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
+	this->addChild(defence_Btn1, 1);
 
-	//add tanks_crateAmmo_1
-	auto tanks_crateAmmo_1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
-	tanks_crateAmmo_1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
-	tanks_crateAmmo_1->setScale(0.5);
-	tanks_crateAmmo_1->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateAmmo_1_click, this));
-	this->addChild(tanks_crateAmmo_1, 1);
+	//add triAttack_Btn1
+	triAttack_Btn1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+	triAttack_Btn1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
+	triAttack_Btn1->setScale(0.5);
+	triAttack_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
+	this->addChild(triAttack_Btn1, 1);
 
-	//add tank_bullet4_2
-	auto tank_bullet4_2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
-	tank_bullet4_2->setPosition(Vec2(visibleSize.width *11 / 12, visibleSize.height * 8.1 / 10));
-	tank_bullet4_2->setFlipX(true);
-	tank_bullet4_2->addTouchEventListener(CC_CALLBACK_1(FireMaster::tank_bullet4_1_click, this));
-	this->addChild(tank_bullet4_2, 1);
+	//add powerBullet_Btn2
+	powerBullet_Btn2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
+	powerBullet_Btn2->setPosition(Vec2(visibleSize.width *11 / 12, visibleSize.height * 8.1 / 10));
+	powerBullet_Btn2->setFlipX(true);
+	powerBullet_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
+	this->addChild(powerBullet_Btn2, 1);
 
-	//add tanks_crateRepair_2
-	auto tanks_crateRepair_2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
-	tanks_crateRepair_2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
-	tanks_crateRepair_2->setScale(0.5);
-	tanks_crateRepair_2->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateRepair_1_click, this));
-	this->addChild(tanks_crateRepair_2, 1);
+	//add fix_Btn2
+	fix_Btn2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+	fix_Btn2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
+	fix_Btn2->setScale(0.5);
+	fix_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
+	this->addChild(fix_Btn2, 1);
 
-	//add tanks_crateArmor_2
-	auto tanks_crateArmor_2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
-	tanks_crateArmor_2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
-	tanks_crateArmor_2->setScale(0.5);
-	tanks_crateArmor_2->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateArmor_1_click, this));
-	this->addChild(tanks_crateArmor_2, 1);
+	//add defence_Btn2
+	defence_Btn2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+	defence_Btn2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
+	defence_Btn2->setScale(0.5);
+	defence_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
+	this->addChild(defence_Btn2, 1);
 
-	//add tanks_crateAmmo_2
-	auto tanks_crateAmmo_2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
-	tanks_crateAmmo_2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
-	tanks_crateAmmo_2->setScale(0.5);
-	tanks_crateAmmo_2->addTouchEventListener(CC_CALLBACK_1(FireMaster::tanks_crateAmmo_1_click, this));
-	this->addChild(tanks_crateAmmo_2, 1);
+	//add triAttack_Btn2
+	triAttack_Btn2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+	triAttack_Btn2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
+	triAttack_Btn2->setScale(0.5);
+	triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
+	this->addChild(triAttack_Btn2, 1);
 }
 
-void FireMaster::tank_bullet4_1_click(Ref * sender)
+//UI栏技能点击函数
+void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
+	powerBullet_Btn1->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateRepair_1_click(Ref * sender)
+void FireMaster::fix_Btn1_click(Ref * sender)
 {
+	fix_Btn1->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateArmor_1_click(Ref * sender)
+void FireMaster::defence_Btn1_click(Ref * sender)
 {
+	defence_Btn1->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateAmmo_1_click(Ref * sender)
+void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
+	triAttack_Btn1->runAction(FadeOut::create(0.5));
 }
-
-
-
-
-
-void FireMaster::tank_bullet4_2_click(Ref * sender)
+void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
+	powerBullet_Btn2->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateRepair_2_click(Ref * sender)
+void FireMaster::fix_Btn2_click(Ref * sender)
 {
+	fix_Btn2->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateArmor_2_click(Ref * sender)
+void FireMaster::defence_Btn2_click(Ref * sender)
 {
+	defence_Btn2->runAction(FadeOut::create(0.5));
 }
-
-void FireMaster::tanks_crateAmmo_2_click(Ref * sender)
+void FireMaster::triAttack_Btn2_click(Ref * sender)
 {
+	triAttack_Btn2->runAction(FadeOut::create(0.5));
 }
 
 
