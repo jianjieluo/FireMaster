@@ -4,6 +4,32 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>blood.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{595,386},{30,13}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{30,13}}</string>
+                <key>sourceSize</key>
+                <string>{30,13}</string>
+            </dict>
+            <key>bloodEnd.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{203,294},{5,13}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{5,13}}</string>
+                <key>sourceSize</key>
+                <string>{5,13}</string>
+            </dict>
             <key>blueAttack1.png</key>
             <dict>
                 <key>frame</key>
@@ -20,7 +46,7 @@
             <key>blueAttack2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{371,451},{166,141}}</string>
+                <string>{{203,473},{166,141}}</string>
                 <key>offset</key>
                 <string>{0,-21}</string>
                 <key>rotated</key>
@@ -33,7 +59,7 @@
             <key>blueAttack3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{629,419},{166,161}}</string>
+                <string>{{203,310},{166,161}}</string>
                 <key>offset</key>
                 <string>{0,-11}</string>
                 <key>rotated</key>
@@ -85,7 +111,7 @@
             <key>bullet3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,386},{50,32}}</string>
+                <string>{{595,334},{50,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,11 +124,11 @@
             <key>bullet4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{595,334},{50,32}}</string>
+                <string>{{819,410},{50,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{50,32}}</string>
                 <key>sourceSize</key>
@@ -111,15 +137,15 @@
             <key>defence.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{819,251},{129,62}}</string>
+                <string>{{819,251},{108,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <true/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{129,62}}</string>
+                <string>{{0,0},{108,64}}</string>
                 <key>sourceSize</key>
-                <string>{129,62}</string>
+                <string>{108,64}</string>
             </dict>
             <key>defenceUI.png</key>
             <dict>
@@ -137,7 +163,7 @@
             <key>explosion1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{797,431},{47,47}}</string>
+                <string>{{763,419},{47,47}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -150,7 +176,7 @@
             <key>explosion2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{883,338},{135,137}}</string>
+                <string>{{885,338},{135,137}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -189,7 +215,7 @@
             <key>fire1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{819,382},{47,58}}</string>
+                <string>{{819,361},{47,58}}</string>
                 <key>offset</key>
                 <string>{2,1}</string>
                 <key>rotated</key>
@@ -254,7 +280,7 @@
             <key>obstacle.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{203,453},{144,134}}</string>
+                <string>{{2,493},{144,134}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -303,6 +329,19 @@
                 <key>sourceSize</key>
                 <string>{37,38}</string>
             </dict>
+            <key>wind.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{871,410},{19,12}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,12}}</string>
+                <key>sourceSize</key>
+                <string>{19,12}</string>
+            </dict>
             <key>yellowAttack1.png</key>
             <dict>
                 <key>frame</key>
@@ -319,7 +358,7 @@
             <key>yellowAttack2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{203,310},{166,141}}</string>
+                <string>{{371,451},{166,141}}</string>
                 <key>offset</key>
                 <string>{0,-20}</string>
                 <key>rotated</key>
@@ -332,7 +371,7 @@
             <key>yellowAttack3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{846,475},{166,159}}</string>
+                <string>{{595,419},{166,159}}</string>
                 <key>offset</key>
                 <string>{0,-11}</string>
                 <key>rotated</key>
@@ -365,7 +404,7 @@
             <key>size</key>
             <string>{1024,1024}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:166099a4ccc705d136913a99aa23163a$</string>
+            <string>$TexturePacker:SmartUpdate:b1570cd44154adf1a54e8ed12052271a$</string>
             <key>textureFileName</key>
             <string>FireMaster.png</string>
         </dict>
