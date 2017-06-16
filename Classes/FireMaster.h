@@ -21,7 +21,7 @@ private:
 	Sprite *obstacle;
 	Sprite *topUI;
 	ui::Button *powerBullet_Btn1, *fix_Btn1, *defence_Btn1, *triAttack_Btn1, *powerBullet_Btn2, *fix_Btn2, *defence_Btn2, *triAttack_Btn2;
-
+	ProgressTimer *pT1,*pT2,*wind;
 
 	void addSprite();
 	void powerBullet_Btn1_click(Ref * sender);
