@@ -1,6 +1,7 @@
 #include "cocos2d.h"
 #include "FireMaster.h"
 #include "SimpleAudioEngine.h"
+#include "AppDelegate.h"
 
 using namespace CocosDenshion;
 
@@ -137,6 +138,49 @@ void FireMaster::addSprite() {
 	triAttack_Btn2->setScale(0.5);
 	triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
 	this->addChild(triAttack_Btn2, 1);
+
+
+	//add hp1
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
+    Sprite* hp1 = Sprite::createWithSpriteFrameName("blood.png");
+	hp1->setFlipX(true);
+	pT1 = ProgressTimer::create(hp1);
+	pT1->setScaleX(11);
+	pT1->setScaleY(1.18);
+	pT1->setAnchorPoint(Vec2(0, 0));
+	pT1->setType(ProgressTimerType::BAR);
+	pT1->setBarChangeRate(Point(1, 0));
+	pT1->setMidpoint(Point(0, 1));
+	pT1->setPercentage(50);
+	pT1->setPosition(Vec2(54,561));
+	addChild(pT1, 1);
+
+	//add hp2
+	Sprite* hp2 = Sprite::createWithSpriteFrameName("blood.png");
+	pT2 = ProgressTimer::create(hp2);
+	pT2->setScaleX(11);
+	pT2->setScaleY(1.18);
+	pT2->setAnchorPoint(Vec2(0, 0));
+	pT2->setType(ProgressTimerType::BAR);
+	pT2->setBarChangeRate(Point(1, 0));
+	pT2->setMidpoint(Point(0, 1));
+	pT2->setPercentage(50);
+	pT2->setPosition(Vec2(574, 561));
+	addChild(pT2, 1);
+
+	//add windpower
+	//风向好似唔洗整血条，直接移动就得？？甘你直接用我个Position同缩放比例就得
+	Sprite* windpower = Sprite::createWithSpriteFrameName("wind.png");
+	wind = ProgressTimer::create(windpower);
+	wind->setScaleX(6);
+	wind->setScaleY(1.18);
+	wind->setAnchorPoint(Vec2(0, 0));
+	wind->setType(ProgressTimerType::BAR);
+	wind->setBarChangeRate(Point(1, 0));
+	wind->setMidpoint(Point(0, 1));
+	wind->setPercentage(50);
+	wind->setPosition(Vec2(450, 500));
+	addChild(wind, 1);
 }
 
 //UI栏技能点击函数
