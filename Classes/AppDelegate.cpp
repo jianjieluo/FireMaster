@@ -82,6 +82,15 @@ void AppDelegate::loadGameResource() {
 	explosionAnimation->setDelayPerUnit(0.02);
 	AnimationCache::getInstance()->addAnimation(explosionAnimation, "explosionAnimation");
 
+    //·¢ÉäµÄ¶¯»­
+    Animation* fireAnimation = Animation::create();
+    for (int i = 1; i <= 4; i++) {
+        sprintf(frameName, "fire%d.png", i);
+        explosionAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+    }
+    explosionAnimation->setDelayPerUnit(0.02);
+    AnimationCache::getInstance()->addAnimation(explosionAnimation, "fireAnimation");
+
 	
 	//ÒôÀÖ
 	SimpleAudioEngine::getInstance()->preloadEffect("music/attack.wav");
