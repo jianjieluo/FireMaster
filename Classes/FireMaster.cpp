@@ -14,24 +14,12 @@ Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
     auto scene = Scene::createWithPhysics();
     //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);ddd
-    scene->getPhysicsWorld()->setAutoStep(false);
+    scene->getPhysicsWorld()->setAutoStep(true);
     scene->getPhysicsWorld()->setGravity(Vec2(0, -300.0f));
     auto layer = FireMaster::create();
     layer->setPhysicsWorld(scene->getPhysicsWorld());
     scene->addChild(layer);
     return scene;
-
-	//// 'scene' is an autorelease object
-	//auto scene = Scene::create();
-
-	//// 'layer' is an autorelease object
-	//auto layer = FireMaster::create();
-
-	//// add layer as a child to scene
-	//scene->addChild(layer);
-
-	//// return the scene
-	//return scene;
 }
 
 // on "init" you need to initialize your instance

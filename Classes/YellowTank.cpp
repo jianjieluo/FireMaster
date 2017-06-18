@@ -1,4 +1,5 @@
 #include "YellowTank.h"
+#include "Bullet.h"
 
 USING_NS_CC;
 
@@ -33,6 +34,8 @@ void YellowTank::initOptions()
     this->setPosition(Director::getInstance()->getVisibleSize().width - 100, 100);
     this->setScale(tankScaleSize);
     this->setFlipX(true);
+
+    this->setDefaultProperty();
 
     // set 物理属性，链接刚体
 }
@@ -106,15 +109,44 @@ void YellowTank::runAttack()
 {
     auto fireAnimate = CallFunc::create([&]() {
         // 在这里添加那个发射的boom的动画，设置好位置，添加，运行动画，移除
+        auto boom = Sprite::createWithSpriteFrameName("fire1.png");
+        boom->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
+
+        this->getParent()->addChild(boom, 2);
+        // 这个还没研究出来怎么去掉爆炸后的效果
+        auto  s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")), DelayTime::create(0.32f),
+            CallFunc::create(
+                [&]() {this->getParent()->removeChild(boom);}
+        ), nullptr); 
+        boom->runAction(s);
     });
 
     auto launch = CallFunc::create([&]() {
         // 在这里添加子弹生成,同时设置好物理的刚体属性，旋转发射角度，水平和垂直初速度等等，
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
+        while (bullet_count--) {
+            auto b = Bullet::create(this->curr_bullet_name);
+            // 子弹相关属性设置，还需要调整
+            b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
+            b->setRotation(230.0f);
+            b->getPhysicsBody()->setVelocity(Vec2(-m_power * 25, m_power*20));
+            b->setHurtness(m_power * 2);
+
+            this->getParent()->addChild(b, 1);
+        }
     });
 
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAttackAnimation"));
 
     auto s = Sequence::create(attackAnimate, fireAnimate, launch, nullptr);
     this->runAction(s);
+
+    // 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
+    this->setDefaultProperty();
+}
+
+void YellowTank::setDefaultProperty()
+{
+    curr_bullet_name = default_bullet_name;
+    bullet_count = 1;
 }
