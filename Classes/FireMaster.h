@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "FireMaster.h"
+#include "Progress.h"
 #include "ui/CocosGUI.h"
 
 using namespace std;

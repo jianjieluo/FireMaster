@@ -41,7 +41,7 @@ void FireMaster::addSprite() {
 	auto bgSprite = Sprite::create("imges/bg2.png");
 	bgSprite->setPosition(visibleSize / 2);
 	bgSprite->setScale(visibleSize.width / bgSprite->getContentSize().width, visibleSize.height / bgSprite->getContentSize().height);
-	this->addChild(bgSprite, 0);
+	//this->addChild(bgSprite, 0);
 
 	auto tankScaleSize = 0.7; //设置坦克缩放大小
 	//add yellow tank
@@ -82,7 +82,7 @@ void FireMaster::addSprite() {
 	topUI->setAnchorPoint(Point(0.5, 0.5));
 	topUI->setPosition(visibleSize.width / 2, visibleSize.height - 80);
 	topUI->setScale(1.4, 1.3);
-	this->addChild(topUI, 1);
+	this->addChild(topUI, 4);
 
 	//add powerBullet_Btn1
 	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
@@ -139,48 +139,49 @@ void FireMaster::addSprite() {
 	triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
 	this->addChild(triAttack_Btn2, 1);
 
-
 	//add hp1
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
-    Sprite* hp1 = Sprite::createWithSpriteFrameName("blood.png");
-	hp1->setFlipX(true);
-	pT1 = ProgressTimer::create(hp1);
-	pT1->setScaleX(11);
-	pT1->setScaleY(1.18);
-	pT1->setAnchorPoint(Vec2(0, 0));
-	pT1->setType(ProgressTimerType::BAR);
-	pT1->setBarChangeRate(Point(1, 0));
-	pT1->setMidpoint(Point(0, 1));
-	pT1->setPercentage(50);
-	pT1->setPosition(Vec2(54,561));
-	addChild(pT1, 1);
+	auto hp1 = Progress::create("progressBg.png","blood.png");
+	hp1->setPosition(Vec2(215, 569));
+	hp1->setScaleX(11.5);
+	hp1->setScaleY(1.5);
+	hp1->setMidpoint(Point(1, 0.5));
+	this->addChild(hp1, 3);
+	//测试
+	hp1->setProgress(50);
+
 
 	//add hp2
-	Sprite* hp2 = Sprite::createWithSpriteFrameName("blood.png");
-	pT2 = ProgressTimer::create(hp2);
-	pT2->setScaleX(11);
-	pT2->setScaleY(1.18);
-	pT2->setAnchorPoint(Vec2(0, 0));
-	pT2->setType(ProgressTimerType::BAR);
-	pT2->setBarChangeRate(Point(1, 0));
-	pT2->setMidpoint(Point(0, 1));
-	pT2->setPercentage(50);
-	pT2->setPosition(Vec2(574, 561));
-	addChild(pT2, 1);
+	auto hp2 = Progress::create("progressBg.png", "blood.png");
+	hp2->setPosition(Vec2(745, 569));
+	hp2->setScaleX(11.5);
+	hp2->setScaleY(1.5);
+	this->addChild(hp2, 3);
+	//测试
+	hp2->setProgress(40);
 
-	//add windpower
-	//风向好似唔洗整血条，直接移动就得？？甘你直接用我个Position同缩放比例就得
-	Sprite* windpower = Sprite::createWithSpriteFrameName("wind.png");
-	wind = ProgressTimer::create(windpower);
-	wind->setScaleX(6);
-	wind->setScaleY(1.18);
-	wind->setAnchorPoint(Vec2(0, 0));
-	wind->setType(ProgressTimerType::BAR);
-	wind->setBarChangeRate(Point(1, 0));
-	wind->setMidpoint(Point(0, 1));
-	wind->setPercentage(50);
-	wind->setPosition(Vec2(450, 500));
-	addChild(wind, 1);
+	//add windpower1
+	auto wind1 = Progress::create("progressBg.png", "wind.png");
+	wind1->setAnchorPoint(Point(1, 0.5));
+	wind1->setPosition(visibleSize.width / 2 + 1, 506.5); //+1 去除中间裂痕
+	wind1->setScaleX(3.5);
+	wind1->setScaleY(1.5);
+	wind1->setMidpoint(Point(1, 0.5));
+	this->addChild(wind1, 3);
+	hp1->setMidpoint(Point(1, 0.5));
+	//测试
+	wind1->setProgress(0);
+
+	//add windpower2
+	auto wind2 = Progress::create("progressBg.png", "wind.png");
+	wind2->setAnchorPoint(Point(0, 0.5));
+	wind2->setPosition(visibleSize.width / 2 - 1, 506.5);
+	wind2->setScaleX(3.5);
+	wind2->setScaleY(1.5);
+	this->addChild(wind2, 3);
+	//测试
+	wind2->setProgress(0);
+	
+	
 }
 
 //UI栏技能点击函数
