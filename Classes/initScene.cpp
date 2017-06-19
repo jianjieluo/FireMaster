@@ -45,17 +45,16 @@ bool initScene::init()
 	//add start button
 	auto startBtn = Button::create("imges/startButton3.png", "imges/startButton2.png");
 	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height /2));
-	startBtn->addTouchEventListener(CC_CALLBACK_1(initScene::StartBtn_click, this));
-	//startBtn->onTouchEnded = CC_CALLBACK_1(initScene::StartBtn_click, this);
+	startBtn->addClickEventListener(CC_CALLBACK_1(initScene::StartBtn_click, this));
 	this->addChild(startBtn, 1);
 	
 	//play bgm
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bgm.mp3", true);
-	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.01f);
+	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5f);
     return true;
 }
 
 void initScene::StartBtn_click(Ref * sender) {
+    SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
 	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, FireMaster::createScene()));
-	SimpleAudioEngine::getInstance()->playEffect("music/click.wav",false);
 }

@@ -68,7 +68,7 @@ void AppDelegate::loadGameResource() {
 		sprintf(frameName, "blueAttack%d.png", i);
 		blueTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
 	}
-	yellowTankAttackAnimation->setDelayPerUnit(0.02);
+	yellowTankAttackAnimation->setDelayPerUnit(0.05);
 	blueTankAttackAnimation->setDelayPerUnit(0.02);
 	AnimationCache::getInstance()->addAnimation(yellowTankAttackAnimation, "yellowTankAttackAnimation");
 	AnimationCache::getInstance()->addAnimation(blueTankAttackAnimation, "blueTankAttackAnimation");
@@ -81,6 +81,15 @@ void AppDelegate::loadGameResource() {
 	}
 	explosionAnimation->setDelayPerUnit(0.02);
 	AnimationCache::getInstance()->addAnimation(explosionAnimation, "explosionAnimation");
+
+    //∑¢…‰µƒ∂Øª≠
+    Animation* fireAnimation = Animation::create();
+    for (int i = 1; i <= 4; i++) {
+        sprintf(frameName, "fire%d.png", i);
+        fireAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+    }
+    fireAnimation->setDelayPerUnit(0.08);
+    AnimationCache::getInstance()->addAnimation(fireAnimation, "fireAnimation");
 
 	
 	//“Ù¿÷

@@ -1,23 +1,26 @@
-#include "cocos2d.h"
+ï»¿#include "cocos2d.h"
 #include "FireMaster.h"
+#include "BlueTank.h"
+#include "YellowTank.h"
 #include "SimpleAudioEngine.h"
 #include "AppDelegate.h"
 
 using namespace CocosDenshion;
+USING_NS_CC;
+
+void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 
 using namespace ui;
 Scene* FireMaster::createScene() {
-	// 'scene' is an autorelease object
-	auto scene = Scene::create();
-
-	// 'layer' is an autorelease object
-	auto layer = FireMaster::create();
-
-	// add layer as a child to scene
-	scene->addChild(layer);
-
-	// return the scene
-	return scene;
+    srand((unsigned)time(NULL));
+    auto scene = Scene::createWithPhysics();
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);ddd
+    scene->getPhysicsWorld()->setAutoStep(true);
+    scene->getPhysicsWorld()->setGravity(Vec2(0, -300.0f));
+    auto layer = FireMaster::create();
+    layer->setPhysicsWorld(scene->getPhysicsWorld());
+    scene->addChild(layer);
+    return scene;
 }
 
 // on "init" you need to initialize your instance
@@ -33,6 +36,13 @@ bool FireMaster::init()
 	origin = Director::getInstance()->getVisibleOrigin();
 
 	addSprite();
+    //add yellow tank
+    yellowTank = YellowTank::create();
+    this->addChild(yellowTank, 1);
+    //add blue tank
+    blueTank = BlueTank::create();
+    this->addChild(blueTank, 1);
+
 	return true;
 }
 
@@ -41,34 +51,15 @@ void FireMaster::addSprite() {
 	auto bgSprite = Sprite::create("imges/bg2.png");
 	bgSprite->setPosition(visibleSize / 2);
 	bgSprite->setScale(visibleSize.width / bgSprite->getContentSize().width, visibleSize.height / bgSprite->getContentSize().height);
-	//this->addChild(bgSprite, 0);
+	this->addChild(bgSprite, 0);
 
-	auto tankScaleSize = 0.7; //ÉèÖÃÌ¹¿ËËõ·Å´óÐ¡
-	//add yellow tank
-	yellowTank = Sprite::createWithSpriteFrameName("yellowAttack1.png");
-	yellowTank->setAnchorPoint(Point(0.5, 0.5));
-	yellowTank->setPosition(visibleSize.width - 100, 100);
-	yellowTank->setScale(tankScaleSize);
-	yellowTank->setFlipX(true);
-	//³µ¶¯»­£¬µ½Ê±ºòÉ¾£¬ÏÖÔÚÏÈÔÚÕâÔËÐÐ¿´¿´Ð§¹û
-	auto yTankAttackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAttackAnimation"));
-	yellowTank->runAction(RepeatForever::create(yTankAttackAnimate));
-	this->addChild(yellowTank, 1);
-
-	//explosion¶¯»­Õ¹Ê¾£¬µ½Ê±ºòÉ¾
-	auto explosion = Sprite::createWithSpriteFrameName("explosion1.png");
-	explosion->setAnchorPoint(Point(0.5, 0.5));
-	explosion->setPosition(visibleSize.width/2, visibleSize.height/2);
-	auto explosionAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation"));
-	explosion->runAction(RepeatForever::create(explosionAnimate));
-	this->addChild(explosion, 1);
-
-	//add blue tank
-	blueTank = Sprite::createWithSpriteFrameName("blueAttack1.png");
-	blueTank->setAnchorPoint(Point(0.5, 0.5));
-	blueTank->setPosition(100, 100);
-	blueTank->setScale(tankScaleSize);
-	this->addChild(blueTank, 1); 
+	//explosionåŠ¨ç”»å±•ç¤ºï¼Œåˆ°æ—¶å€™åˆ 
+	//auto explosion = Sprite::createWithSpriteFrameName("explosion1.png");
+	//explosion->setAnchorPoint(Point(0.5, 0.5));
+	//explosion->setPosition(visibleSize.width/2, visibleSize.height/2);
+	//auto explosionAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation"));
+	//explosion->runAction(RepeatForever::create(explosionAnimate));
+	//this->addChild(explosion, 1);
 
 	//add obstacle
 	obstacle = Sprite::createWithSpriteFrameName("obstacle.png");
@@ -146,7 +137,6 @@ void FireMaster::addSprite() {
 	hp1->setScaleY(1.5);
 	hp1->setMidpoint(Point(1, 0.5));
 	this->addChild(hp1, 3);
-	//²âÊÔ
 	hp1->setProgress(50);
 
 
@@ -156,19 +146,17 @@ void FireMaster::addSprite() {
 	hp2->setScaleX(11.5);
 	hp2->setScaleY(1.5);
 	this->addChild(hp2, 3);
-	//²âÊÔ
 	hp2->setProgress(40);
 
 	//add windpower1
 	auto wind1 = Progress::create("progressBg.png", "wind.png");
 	wind1->setAnchorPoint(Point(1, 0.5));
-	wind1->setPosition(visibleSize.width / 2 + 1, 506.5); //+1 È¥³ýÖÐ¼äÁÑºÛ
+	wind1->setPosition(visibleSize.width / 2 + 1, 506.5); //+1 È¥ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½Ñºï¿½
 	wind1->setScaleX(3.5);
 	wind1->setScaleY(1.5);
 	wind1->setMidpoint(Point(1, 0.5));
 	this->addChild(wind1, 3);
 	hp1->setMidpoint(Point(1, 0.5));
-	//²âÊÔ
 	wind1->setProgress(0);
 
 	//add windpower2
@@ -178,46 +166,88 @@ void FireMaster::addSprite() {
 	wind2->setScaleX(3.5);
 	wind2->setScaleY(1.5);
 	this->addChild(wind2, 3);
-	//²âÊÔ
 	wind2->setProgress(0);
 	
-	
+    //add fix_Btn1
+    fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+    fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
+    fix_Btn1->setScale(0.5);
+    fix_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
+    this->addChild(fix_Btn1, 1);
+
+    //add defence_Btn1
+    defence_Btn1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+    defence_Btn1->setPosition(Vec2(visibleSize.width * 25 / 96, visibleSize.height * 8.1 / 10));
+    defence_Btn1->setScale(0.5);
+    defence_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
+    this->addChild(defence_Btn1, 1);
+
+    //add triAttack_Btn1
+    triAttack_Btn1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+    triAttack_Btn1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
+    triAttack_Btn1->setScale(0.5);
+    triAttack_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
+    this->addChild(triAttack_Btn1, 1);
+
+    //add powerBullet_Btn2
+    powerBullet_Btn2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
+    powerBullet_Btn2->setPosition(Vec2(visibleSize.width * 11 / 12, visibleSize.height * 8.1 / 10));
+    powerBullet_Btn2->setFlipX(true);
+    powerBullet_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
+    this->addChild(powerBullet_Btn2, 1);
+
+    //add fix_Btn2
+    fix_Btn2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+    fix_Btn2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
+    fix_Btn2->setScale(0.5);
+    fix_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
+    this->addChild(fix_Btn2, 1);
+
+    //add defence_Btn2
+    defence_Btn2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+    defence_Btn2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
+    defence_Btn2->setScale(0.5);
+    defence_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
+    this->addChild(defence_Btn2, 1);
+
+    //add triAttack_Btn2
+    triAttack_Btn2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+    triAttack_Btn2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
+    triAttack_Btn2->setScale(0.5);
+    triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
+    this->addChild(triAttack_Btn2, 1);
 }
 
-//UIÀ¸¼¼ÄÜµã»÷º¯Êý
+//UIæ æŠ€èƒ½ç‚¹å‡»å‡½æ•°
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
-	powerBullet_Btn1->runAction(FadeOut::create(0.5));
+    powerBullet_Btn1->runAction(FadeOut::create(0.5));
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
-	fix_Btn1->runAction(FadeOut::create(0.5));
+    fix_Btn1->runAction(FadeOut::create(0.5));
 }
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
-	defence_Btn1->runAction(FadeOut::create(0.5));
+    defence_Btn1->runAction(FadeOut::create(0.5));
 }
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
-	triAttack_Btn1->runAction(FadeOut::create(0.5));
+    triAttack_Btn1->runAction(FadeOut::create(0.5));
 }
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
-	powerBullet_Btn2->runAction(FadeOut::create(0.5));
+    powerBullet_Btn2->runAction(FadeOut::create(0.5));
 }
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
-	fix_Btn2->runAction(FadeOut::create(0.5));
+    fix_Btn2->runAction(FadeOut::create(0.5));
 }
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
-	defence_Btn2->runAction(FadeOut::create(0.5));
+    defence_Btn2->runAction(FadeOut::create(0.5));
 }
 void FireMaster::triAttack_Btn2_click(Ref * sender)
 {
-	triAttack_Btn2->runAction(FadeOut::create(0.5));
+    triAttack_Btn2->runAction(FadeOut::create(0.5));
 }
-
-
-
-
