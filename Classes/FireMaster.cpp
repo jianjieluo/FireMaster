@@ -3,13 +3,19 @@
 #include "BlueTank.h"
 #include "YellowTank.h"
 #include "SimpleAudioEngine.h"
+#include <string>
 
+using namespace ui;
 using namespace CocosDenshion;
 USING_NS_CC;
 
 void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 
-using namespace ui;
+void FireMaster::nextTurn()
+{
+    ++Global::turn;
+}
+
 Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
     auto scene = Scene::createWithPhysics();
@@ -30,7 +36,7 @@ bool FireMaster::init()
 	{
 		return false;
 	}
-
+    Global::turn = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
@@ -74,11 +80,18 @@ void FireMaster::addSprite() {
 	topUI->setScale(1.4, 1.3);
 	this->addChild(topUI, 1);
 
+    turnUI = Label::createWithTTF("Round:0 right", "fonts/arial.ttf", 36);
+    turnUI->setAnchorPoint(Point(0.5, 0.5));
+    turnUI->setPosition(visibleSize.width / 2, visibleSize.height - 180);
+    //turnUI->setScale(1.4, 1.3);
+    this->addChild(turnUI, 1);
+
 	//add powerBullet_Btn1
 	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
 	powerBullet_Btn1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
 	powerBullet_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
 	this->addChild(powerBullet_Btn1, 1);
+    this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
 
     //add fix_Btn1
     fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
@@ -129,6 +142,19 @@ void FireMaster::addSprite() {
     triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
     this->addChild(triAttack_Btn2, 1);
 }
+
+
+void FireMaster::updateTurnUI(float ft)
+{
+
+    auto curr_turn = std::to_string(Global::turn);
+    auto side = ((Global::turn % 2) == 0) ? "right" : "left";
+    auto newstr = "Round:" + curr_turn + " " + side;
+
+    turnUI->setString(newstr);
+}
+
+
 
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
