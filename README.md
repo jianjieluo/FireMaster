@@ -12,12 +12,16 @@ A funny cocos2dx game ! Learn From the idea of a game called Fleabag Vs. Mutt.
 ### 2. 技能说明
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/bullet.png)
 普通炮弹 普通伤害10%-20% 可用次数无限
+
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/powerBullet.png)
 强爆导弹 普通伤害20%-40%  可用一次
+
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/defenceUI.png)
 矩阵防御 可防御一次敌方攻击
+
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/fixUI.png)
 临时修理 恢复30%总生命值
+
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/tribbleAttackUI.png)
 三炮齐发 蓄力一次，按照该蓄力力度发射三发普通炮弹
 ### 3. 未来扩展计划
