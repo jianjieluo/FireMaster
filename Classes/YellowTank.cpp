@@ -1,5 +1,6 @@
 #include "YellowTank.h"
 #include "Bullet.h"
+#include "Global.h"
 
 USING_NS_CC;
 
@@ -150,8 +151,9 @@ void YellowTank::runAttack()
 
     // 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
     this->setDefaultProperty();
-    //++Global::turn;
-    //this->getParent()->nextTurn();
+
+    // Global 回合数加一
+    ++Global::turn;
 }
 
 void YellowTank::setDefaultProperty()

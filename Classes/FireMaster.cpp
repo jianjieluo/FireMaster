@@ -4,6 +4,7 @@
 #include "YellowTank.h"
 #include "SimpleAudioEngine.h"
 #include "AppDelegate.h"
+#include "Global.h"
 
 #include <string>
 
@@ -12,11 +13,6 @@ using namespace CocosDenshion;
 USING_NS_CC;
 
 void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
-
-void FireMaster::nextTurn()
-{
-    //++Global::turn;
-}
 
 Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
@@ -38,7 +34,6 @@ bool FireMaster::init()
 	{
 		return false;
 	}
-    //Global::turn = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
@@ -236,10 +231,10 @@ void FireMaster::addSprite() {
 void FireMaster::updateTurnUI(float ft)
 {
 
-    //auto curr_turn = std::to_string(Global::turn);
-    //auto side = ((Global::turn % 2) == 0) ? "right" : "left";
-    //auto newstr = "Round:" + curr_turn + " " + side;
-    auto newstr = "Turn: 0";
+    auto curr_turn = std::to_string(Global::turn);
+    auto side = ((Global::turn % 2) == 0) ? "right" : "left";
+    auto newstr = "Round:" + curr_turn + " " + side;
+    //auto newstr = "Turn: 0";
     turnUI->setString(newstr);
 }
 

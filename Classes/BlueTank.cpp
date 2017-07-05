@@ -1,4 +1,6 @@
 #include "BlueTank.h"
+#include "Bullet.h"
+#include "Global.h"
 
 USING_NS_CC;
 

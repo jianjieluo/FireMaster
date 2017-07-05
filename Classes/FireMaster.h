@@ -29,7 +29,6 @@ public:
     void defence_Btn2_click(Ref * sender);
     void triAttack_Btn2_click(Ref * sender);
 
-    void nextTurn();
     void updateTurnUI(float ft);
 
 	CREATE_FUNC(FireMaster);
