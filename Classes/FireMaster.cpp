@@ -151,7 +151,7 @@ void FireMaster::addSprite() {
 	//add windpower1
 	auto wind1 = Progress::create("progressBg.png", "wind.png");
 	wind1->setAnchorPoint(Point(1, 0.5));
-	wind1->setPosition(visibleSize.width / 2 + 1, 506.5); //+1 ȥ���м��Ѻ�
+	wind1->setPosition(visibleSize.width / 2 + 1, 506.5);
 	wind1->setScaleX(3.5);
 	wind1->setScaleY(1.5);
 	wind1->setMidpoint(Point(1, 0.5));

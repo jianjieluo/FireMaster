@@ -114,6 +114,6 @@ void BlueTank::runAttack()
 
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
 
-    auto s = Sequence::create(attackAnimate, fireAnimate, launch, nullptr);
+	auto s = Sequence::create(attackAnimate, fireAnimate, launch, nullptr);
     this->runAction(s);
 }

@@ -42,6 +42,7 @@ bool initScene::init()
 	bgSprite->setPosition(visibleSize / 2);
 	bgSprite->setScale(visibleSize.width / bgSprite->getContentSize().width, visibleSize.height / bgSprite->getContentSize().height);
 	this->addChild(bgSprite, 0);
+
 	//add start button
 	auto startBtn = Button::create("imges/startButton3.png", "imges/startButton2.png");
 	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height /2));
