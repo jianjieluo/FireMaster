@@ -68,6 +68,14 @@ void FireMaster::addSprite() {
 	obstacle->setAnchorPoint(Point(0.5, 0.5));
 	obstacle->setPosition(visibleSize.width / 2, 120);
 	obstacle->setScale(1.3, 1.4);
+
+    auto obstaclebody = PhysicsBody::createBox(obstacle->getContentSize(), PhysicsMaterial(100.0f, 0.0f, 1.0f));
+    obstaclebody->setCategoryBitmask(0xFFFFFFFF);
+    obstaclebody->setCollisionBitmask(0xFFFFFFFF);
+    obstaclebody->setContactTestBitmask(0xFFFFFFFF);
+    obstaclebody->setDynamic(false);
+    obstacle->setPhysicsBody(obstaclebody);
+
 	this->addChild(obstacle, 1);
 
     //add UI
