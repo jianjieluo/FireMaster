@@ -59,19 +59,33 @@ void AppDelegate::loadGameResource() {
 	//¶¯»­
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
 	char frameName[30];
-	//Ì¹¿Ë¶¯»­
+
+	//Ì¹¿Ë¹¥»÷¶¯»­
 	Animation* yellowTankAttackAnimation = Animation::create();
 	Animation* blueTankAttackAnimation = Animation::create();
+	//¹¥»÷ºó¶¯»­
+	Animation* yellowTankAfterAttackAnimation = Animation::create();
+	Animation* blueTankAfterAttackAnimation = Animation::create();
+
 	for (int i = 1; i <= 4; i++) {
 		sprintf(frameName, "yellowAttack%d.png", i);
 		yellowTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
 		sprintf(frameName, "blueAttack%d.png", i);
 		blueTankAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+		sprintf(frameName, "yellowAttack%d.png", 5 - i);
+		yellowTankAfterAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
+		sprintf(frameName, "blueAttack%d.png", 5 - i);
+		blueTankAfterAttackAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
 	}
 	yellowTankAttackAnimation->setDelayPerUnit(0.05);
-	blueTankAttackAnimation->setDelayPerUnit(0.02);
+	blueTankAttackAnimation->setDelayPerUnit(0.05);
+	yellowTankAfterAttackAnimation->setDelayPerUnit(0.05);
+	blueTankAfterAttackAnimation->setDelayPerUnit(0.05);
+
 	AnimationCache::getInstance()->addAnimation(yellowTankAttackAnimation, "yellowTankAttackAnimation");
 	AnimationCache::getInstance()->addAnimation(blueTankAttackAnimation, "blueTankAttackAnimation");
+	AnimationCache::getInstance()->addAnimation(yellowTankAfterAttackAnimation, "yellowTankAfterAttackAnimation");
+	AnimationCache::getInstance()->addAnimation(blueTankAfterAttackAnimation, "blueTankAfterAttackAnimation");
 
 	//±¬Õ¨¶¯»­
 	Animation* explosionAnimation = Animation::create();

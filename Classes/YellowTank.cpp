@@ -1,6 +1,5 @@
 #include "YellowTank.h"
 #include "Bullet.h"
-#include "Global.h"
 
 USING_NS_CC;
 
@@ -113,11 +112,16 @@ void YellowTank::runAttack()
         auto boom = Sprite::createWithSpriteFrameName("fire1.png");
         boom->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
 
-        this->getParent()->addChild(boom, 2);
-        // 这个还没研究出来怎么去掉爆炸后的效果
-        auto  s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")), DelayTime::create(0.32f),
+        this->getParent()->addChild(boom, 2, "boom"); // 设置一个名字，便于追踪
+
+        // 去掉爆炸后的效果
+        auto s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")),
             CallFunc::create(
-                [&]() {this->getParent()->removeChild(boom);}
+				[&]() {
+			this->getParent()->getChildByName("boom")->removeAllChildrenWithCleanup(true);
+			this->getParent()->getChildByName("boom")->removeFromParentAndCleanup(true);
+			//this->getParent()->getChildByName("boom")->removeFromParent();
+		}
         ), nullptr); 
         boom->runAction(s);
     });
@@ -139,12 +143,14 @@ void YellowTank::runAttack()
 
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAttackAnimation"));
 
-    auto s = Sequence::create(attackAnimate, fireAnimate, launch, nullptr);
+	auto afterAttackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAfterAttackAnimation"));
+
+	auto s = Sequence::create(attackAnimate, fireAnimate, launch, DelayTime::create(0.5f), afterAttackAnimate, nullptr);
     this->runAction(s);
 
     // 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
     this->setDefaultProperty();
-    ++Global::turn;
+    //++Global::turn;
     //this->getParent()->nextTurn();
 }
 

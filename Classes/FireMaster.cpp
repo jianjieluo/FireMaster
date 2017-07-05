@@ -3,6 +3,8 @@
 #include "BlueTank.h"
 #include "YellowTank.h"
 #include "SimpleAudioEngine.h"
+#include "AppDelegate.h"
+
 #include <string>
 
 using namespace ui;
@@ -13,7 +15,7 @@ void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 
 void FireMaster::nextTurn()
 {
-    ++Global::turn;
+    //++Global::turn;
 }
 
 Scene* FireMaster::createScene() {
@@ -36,7 +38,7 @@ bool FireMaster::init()
 	{
 		return false;
 	}
-    Global::turn = 0;
+    //Global::turn = 0;
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
@@ -78,7 +80,7 @@ void FireMaster::addSprite() {
 	topUI->setAnchorPoint(Point(0.5, 0.5));
 	topUI->setPosition(visibleSize.width / 2, visibleSize.height - 80);
 	topUI->setScale(1.4, 1.3);
-	this->addChild(topUI, 1);
+	this->addChild(topUI, 4);
 
     turnUI = Label::createWithTTF("Round:0 right", "fonts/arial.ttf", 36);
     turnUI->setAnchorPoint(Point(0.5, 0.5));
@@ -93,6 +95,93 @@ void FireMaster::addSprite() {
 	this->addChild(powerBullet_Btn1, 1);
     this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
 
+	//add fix_Btn1
+	fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+	fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
+	fix_Btn1->setScale(0.5);
+	fix_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
+	this->addChild(fix_Btn1, 1);
+
+	//add defence_Btn1
+	defence_Btn1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+	defence_Btn1->setPosition(Vec2(visibleSize.width * 25 / 96 , visibleSize.height * 8.1 / 10));
+	defence_Btn1->setScale(0.5);
+	defence_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
+	this->addChild(defence_Btn1, 1);
+
+	//add triAttack_Btn1
+	triAttack_Btn1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+	triAttack_Btn1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
+	triAttack_Btn1->setScale(0.5);
+	triAttack_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
+	this->addChild(triAttack_Btn1, 1);
+
+	//add powerBullet_Btn2
+	powerBullet_Btn2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
+	powerBullet_Btn2->setPosition(Vec2(visibleSize.width *11 / 12, visibleSize.height * 8.1 / 10));
+	powerBullet_Btn2->setFlipX(true);
+	powerBullet_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
+	this->addChild(powerBullet_Btn2, 1);
+
+	//add fix_Btn2
+	fix_Btn2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
+	fix_Btn2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
+	fix_Btn2->setScale(0.5);
+	fix_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
+	this->addChild(fix_Btn2, 1);
+
+	//add defence_Btn2
+	defence_Btn2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
+	defence_Btn2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
+	defence_Btn2->setScale(0.5);
+	defence_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
+	this->addChild(defence_Btn2, 1);
+
+	//add triAttack_Btn2
+	triAttack_Btn2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
+	triAttack_Btn2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
+	triAttack_Btn2->setScale(0.5);
+	triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
+	this->addChild(triAttack_Btn2, 1);
+
+	//add hp1
+	auto hp1 = Progress::create("progressBg.png","blood.png");
+	hp1->setPosition(Vec2(215, 569));
+	hp1->setScaleX(11.5);
+	hp1->setScaleY(1.5);
+	hp1->setMidpoint(Point(1, 0.5));
+	this->addChild(hp1, 3);
+	hp1->setProgress(50);
+
+
+	//add hp2
+	auto hp2 = Progress::create("progressBg.png", "blood.png");
+	hp2->setPosition(Vec2(745, 569));
+	hp2->setScaleX(11.5);
+	hp2->setScaleY(1.5);
+	this->addChild(hp2, 3);
+	hp2->setProgress(40);
+
+	//add windpower1
+	auto wind1 = Progress::create("progressBg.png", "wind.png");
+	wind1->setAnchorPoint(Point(1, 0.5));
+	wind1->setPosition(visibleSize.width / 2 + 1, 506.5);
+	wind1->setScaleX(3.5);
+	wind1->setScaleY(1.5);
+	wind1->setMidpoint(Point(1, 0.5));
+	this->addChild(wind1, 3);
+	hp1->setMidpoint(Point(1, 0.5));
+	wind1->setProgress(0);
+
+	//add windpower2
+	auto wind2 = Progress::create("progressBg.png", "wind.png");
+	wind2->setAnchorPoint(Point(0, 0.5));
+	wind2->setPosition(visibleSize.width / 2 - 1, 506.5);
+	wind2->setScaleX(3.5);
+	wind2->setScaleY(1.5);
+	this->addChild(wind2, 3);
+	wind2->setProgress(0);
+	
     //add fix_Btn1
     fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
     fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
@@ -147,10 +236,10 @@ void FireMaster::addSprite() {
 void FireMaster::updateTurnUI(float ft)
 {
 
-    auto curr_turn = std::to_string(Global::turn);
-    auto side = ((Global::turn % 2) == 0) ? "right" : "left";
-    auto newstr = "Round:" + curr_turn + " " + side;
-
+    //auto curr_turn = std::to_string(Global::turn);
+    //auto side = ((Global::turn % 2) == 0) ? "right" : "left";
+    //auto newstr = "Round:" + curr_turn + " " + side;
+    auto newstr = "Turn: 0";
     turnUI->setString(newstr);
 }
 
