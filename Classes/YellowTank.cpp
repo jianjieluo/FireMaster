@@ -1,5 +1,7 @@
 #include "YellowTank.h"
 #include "Bullet.h"
+#include "Progress.h"
+#include "AppDelegate.h"
 
 USING_NS_CC;
 
@@ -62,11 +64,15 @@ void YellowTank::addTouchListener()
             this->schedule(schedule_selector(YellowTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
             // 按下的时候添加力度进度条到场景里面去
-            // 创建蓄力条，先用label代替
-            powerbar = Label::createWithTTF("0", "fonts/arial.ttf", 20);
+            // 创建蓄力条
+		    powerbar = Progress::create("progressBg.png", "blood.png");
+			powerbar->setScaleX(3);
+			powerbar->setScaleY(1.5);
+			powerbar->setRotation(-90);
+			powerbar->setProgress(0);
             // 相对于坦克来设置对应的powerbar位置
             powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
-            this->getParent()->addChild(this->powerbar);
+			this->getParent()->addChild(this->powerbar);
 
             return true; // to indicate that we have consumed it.
         }
@@ -100,8 +106,7 @@ void YellowTank::updatePowerbar(float ft)
     {
         // 按照增长速度来蓄力，并且反馈在UI上面
         m_power += m_pressv;
-        auto temp = std::to_string(m_power);
-        powerbar->setString(temp);
+		powerbar->setProgress(5 * m_power);
     }
 }
 

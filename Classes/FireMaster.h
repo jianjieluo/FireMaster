@@ -45,6 +45,11 @@ private:
 	void fix_Btn2_click(Ref * sender);
 	void defence_Btn2_click(Ref * sender);
 	void triAttack_Btn2_click(Ref * sender);
+	
+	//加了个调度看看效果
+	void timer(float a);
+	ProgressTimer * waitClock;
+	int n = 100;
 
 private:
     //void updatePower();
