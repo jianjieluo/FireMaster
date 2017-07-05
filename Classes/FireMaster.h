@@ -18,6 +18,18 @@ public:
 	virtual bool init();
 
     void setPhysicsWorld(PhysicsWorld * world);
+    void addSprite();
+
+    void powerBullet_Btn1_click(Ref * sender);
+    void fix_Btn1_click(Ref * sender);
+    void defence_Btn1_click(Ref * sender);
+    void triAttack_Btn1_click(Ref * sender);
+    void powerBullet_Btn2_click(Ref * sender);
+    void fix_Btn2_click(Ref * sender);
+    void defence_Btn2_click(Ref * sender);
+    void triAttack_Btn2_click(Ref * sender);
+
+    void updateTurnUI(float ft);
 
 	CREATE_FUNC(FireMaster);
 
@@ -45,15 +57,15 @@ private:
 	void fix_Btn2_click(Ref * sender);
 	void defence_Btn2_click(Ref * sender);
 	void triAttack_Btn2_click(Ref * sender);
-	
-	//加了个调度看看效果
+
 	void timer(float a);
 	ProgressTimer * waitClock;
 	int n = 100;
 
 private:
-    //void updatePower();
     PhysicsWorld* m_world;
+    int m_turn;
+    cocos2d::Label* turnUI;
 };
 
 #endif // __FIRE_MASTER_H__

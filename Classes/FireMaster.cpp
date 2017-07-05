@@ -4,14 +4,15 @@
 #include "YellowTank.h"
 #include "SimpleAudioEngine.h"
 #include "AppDelegate.h"
+#include "Global.h"
+#include <string>
 
-
+using namespace ui;
 using namespace CocosDenshion;
 USING_NS_CC;
 
 void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 
-using namespace ui;
 Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
     auto scene = Scene::createWithPhysics();
@@ -32,7 +33,6 @@ bool FireMaster::init()
 	{
 		return false;
 	}
-
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
@@ -68,6 +68,14 @@ void FireMaster::addSprite() {
 	obstacle->setAnchorPoint(Point(0.5, 0.5));
 	obstacle->setPosition(visibleSize.width / 2, 120);
 	obstacle->setScale(1.3, 1.4);
+
+    auto obstaclebody = PhysicsBody::createBox(obstacle->getContentSize(), PhysicsMaterial(100.0f, 0.0f, 1.0f));
+    obstaclebody->setCategoryBitmask(0xFFFFFFFF);
+    obstaclebody->setCollisionBitmask(0xFFFFFFFF);
+    obstaclebody->setContactTestBitmask(0xFFFFFFFF);
+    obstaclebody->setDynamic(false);
+    obstacle->setPhysicsBody(obstaclebody);
+
 	this->addChild(obstacle, 1);
 
     //add UI
@@ -77,11 +85,18 @@ void FireMaster::addSprite() {
 	topUI->setScale(1.4, 1.3);
 	this->addChild(topUI, 4);
 
+    turnUI = Label::createWithTTF("Round:0 right", "fonts/arial.ttf", 36);
+    turnUI->setAnchorPoint(Point(0.5, 0.5));
+    turnUI->setPosition(visibleSize.width / 2, visibleSize.height - 180);
+    //turnUI->setScale(1.4, 1.3);
+    this->addChild(turnUI, 1);
+
 	//add powerBullet_Btn1
 	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
 	powerBullet_Btn1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
 	powerBullet_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
 	this->addChild(powerBullet_Btn1, 1);
+    this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
 
 	//add fix_Btn1
 	fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
@@ -231,6 +246,19 @@ void FireMaster::addSprite() {
 	this->addChild(waitClock, 3);
 	
 }
+
+
+void FireMaster::updateTurnUI(float ft)
+{
+
+    auto curr_turn = std::to_string(Global::turn);
+    auto side = ((Global::turn % 2) == 0) ? "right" : "left";
+    auto newstr = "Round:" + curr_turn + " " + side;
+    //auto newstr = "Turn: 0";
+    turnUI->setString(newstr);
+}
+
+
 
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
