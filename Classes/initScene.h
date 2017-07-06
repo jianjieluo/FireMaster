@@ -1,5 +1,5 @@
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef __INITSCENE_H__
+#define __INITSCENE_H__
 
 #include "cocos2d.h"
 
@@ -16,5 +16,6 @@ public:
     CREATE_FUNC(initScene);
 
 	void StartBtn_click(Ref * sender);
+	void introductionBtn_click(Ref* sender);
 };
-#endif // __HELLOWORLD_SCENE_H__
+#endif // __INITSCENE_H__
