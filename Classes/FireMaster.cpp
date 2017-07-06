@@ -44,7 +44,9 @@ bool FireMaster::init()
     blueTank = BlueTank::create();
     this->addChild(blueTank, 1);
 
+	//添加调度器
 	this->schedule(schedule_selector(FireMaster::timer), 0.1);
+
 	return true;
 }
 
@@ -250,7 +252,6 @@ void FireMaster::addSprite() {
 
 void FireMaster::updateTurnUI(float ft)
 {
-
     auto curr_turn = std::to_string(Global::turn);
     auto side = ((Global::turn % 2) == 0) ? "right" : "left";
     auto newstr = "Round:" + curr_turn + " " + side;

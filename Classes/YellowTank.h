@@ -1,6 +1,7 @@
 #pragma once
 #include "Progress.h"
 #include "cocos2d.h"
+#include "Bullet.h"
 #include <string>
 
 class YellowTank : public cocos2d::Sprite
@@ -33,6 +34,10 @@ public:
     //个体行为
     void runAttack();
     void setDefaultProperty();
+
+	//子弹行为
+	void updateBulletRotation(float t);
+	void removeBullet();
 
 private:
     // const 表示该精灵的固有属性

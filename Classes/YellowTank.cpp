@@ -1,8 +1,9 @@
 #include "YellowTank.h"
-#include "Bullet.h"
 #include "Global.h"
 #include "Progress.h"
 #include "AppDelegate.h"
+#include <iostream>
+#include <sstream>
 
 USING_NS_CC;
 
@@ -139,11 +140,12 @@ void YellowTank::runAttack()
             auto b = Bullet::create(this->curr_bullet_name);
             // 子弹相关属性设置，还需要调整
             b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
-            b->setRotation(230.0f);
+            b->setRotation(0.0f);
             b->getPhysicsBody()->setVelocity(Vec2(-m_power * 25, m_power*20));
             b->setHurtness(m_power * 2);
+            this->getParent()->addChild(b, 1, 1001); //设一个1001的tag给它，到时候3连发的话再想
 
-            this->getParent()->addChild(b, 1);
+			this->schedule(schedule_selector(YellowTank::updateBulletRotation), 0.1);
         }
     });
 
@@ -161,8 +163,37 @@ void YellowTank::runAttack()
     ++Global::turn;
 }
 
+void YellowTank::updateBulletRotation(float t) {
+	CCString* ns;
+	auto bullet = this->getParent()->getChildByTag(1001);
+	if (bullet != NULL) {
+		//向量标准化
+		auto vPoint = ccpNormalize(bullet->getPhysicsBody()->getVelocity());
+		//算出旋转的弧度
+		auto radians = atan2f(vPoint.y, vPoint.x);
+		//将弧度转换成角度  
+		float degree = CC_RADIANS_TO_DEGREES(radians);
+
+		bullet->setRotation(-degree); //由于cocos2dx的setRotation顺时针旋转，取个负号
+		ns = CCString::createWithFormat("%f", degree);
+		CCLOG(ns->getCString());
+		ns = CCString::createWithFormat("x: %f", vPoint.x);
+		CCLOG(ns->getCString());
+		ns = CCString::createWithFormat("y: %f", vPoint.y);
+		CCLOG(ns->getCString());
+
+
+	}
+}
+
+void YellowTank::removeBullet() {
+
+}
+
 void YellowTank::setDefaultProperty()
 {
     curr_bullet_name = default_bullet_name;
     bullet_count = 1;
 }
+
+
