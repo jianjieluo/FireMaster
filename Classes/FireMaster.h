@@ -18,17 +18,6 @@ public:
 	virtual bool init();
 
     void setPhysicsWorld(PhysicsWorld * world);
-    void addSprite();
-
-    void powerBullet_Btn1_click(Ref * sender);
-    void fix_Btn1_click(Ref * sender);
-    void defence_Btn1_click(Ref * sender);
-    void triAttack_Btn1_click(Ref * sender);
-    void powerBullet_Btn2_click(Ref * sender);
-    void fix_Btn2_click(Ref * sender);
-    void defence_Btn2_click(Ref * sender);
-    void triAttack_Btn2_click(Ref * sender);
-
     void updateTurnUI(float ft);
 
 	CREATE_FUNC(FireMaster);

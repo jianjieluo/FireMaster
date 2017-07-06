@@ -69,7 +69,7 @@ void YellowTank::addTouchListener()
 		    powerbar = Progress::create("progressBg.png", "blood.png");
 			powerbar->setScaleX(3);
 			powerbar->setScaleY(1.5);
-			powerbar->setRotation(-90);
+			powerbar->setRotation(0);
 			powerbar->setProgress(0);
             // 相对于坦克来设置对应的powerbar位置
             powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
