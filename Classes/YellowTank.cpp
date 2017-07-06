@@ -140,7 +140,7 @@ void YellowTank::runAttack()
             auto b = Bullet::create(this->curr_bullet_name);
             // 子弹相关属性设置，还需要调整
             b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
-            b->setRotation(0.0f);
+            b->setRotation(230.0f);
             b->getPhysicsBody()->setVelocity(Vec2(-m_power * 25, m_power*20));
             b->setHurtness(m_power * 2);
             this->getParent()->addChild(b, 1, 1001); //设一个1001的tag给它，到时候3连发的话再想
@@ -163,6 +163,7 @@ void YellowTank::runAttack()
     ++Global::turn;
 }
 
+//实验类的实现，具体怎么调用要等到子弹会消失才能做
 void YellowTank::updateBulletRotation(float t) {
 	CCString* ns;
 	auto bullet = this->getParent()->getChildByTag(1001);
@@ -173,16 +174,7 @@ void YellowTank::updateBulletRotation(float t) {
 		auto radians = atan2f(vPoint.y, vPoint.x);
 		//将弧度转换成角度  
 		float degree = CC_RADIANS_TO_DEGREES(radians);
-
 		bullet->setRotation(-degree); //由于cocos2dx的setRotation顺时针旋转，取个负号
-		ns = CCString::createWithFormat("%f", degree);
-		CCLOG(ns->getCString());
-		ns = CCString::createWithFormat("x: %f", vPoint.x);
-		CCLOG(ns->getCString());
-		ns = CCString::createWithFormat("y: %f", vPoint.y);
-		CCLOG(ns->getCString());
-
-
 	}
 }
 
