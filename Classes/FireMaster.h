@@ -58,6 +58,8 @@ private:
     cocos2d::Label* turnUI;
 
     Rect m_checkingRects[6];
+
+	Progress* hp1, * hp2;
 };
 
 #endif // __FIRE_MASTER_H__
