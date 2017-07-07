@@ -331,8 +331,11 @@ void FireMaster::updateCollision(float ft)
 
             auto seq = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation")),
                 CallFunc::create(
-                    [explosion]() {
+                    [&]() {
                 explosion->removeFromParentAndCleanup(true);
+                // 在这里计算爆炸点和两个坦克之间的距离，然后计算伤害
+
+                // 爆炸之后才能进入下一个回合
                 ++Global::turn;
             }), nullptr);
 
