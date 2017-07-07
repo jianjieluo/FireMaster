@@ -93,7 +93,7 @@ void AppDelegate::loadGameResource() {
 		sprintf(frameName, "explosion%d.png", i);
 		explosionAnimation->addSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
 	}
-	explosionAnimation->setDelayPerUnit(0.02);
+	explosionAnimation->setDelayPerUnit(0.1);
 	AnimationCache::getInstance()->addAnimation(explosionAnimation, "explosionAnimation");
 
     //·¢ÉäµÄ¶¯»­

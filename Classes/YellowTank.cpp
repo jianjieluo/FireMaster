@@ -61,22 +61,24 @@ void YellowTank::addTouchListener()
 
         if(rect.containsPoint(p))
         {
-            m_power = 0;
-            m_istouch = true;//按钮按下
-            this->schedule(schedule_selector(YellowTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
+            if (Global::turn % 2 == 0) {
+                m_power = 0;
+                m_istouch = true;//按钮按下
+                this->schedule(schedule_selector(YellowTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
-            // 按下的时候添加力度进度条到场景里面去
-            // 创建蓄力条
-		    powerbar = Progress::create("progressBg.png", "blood.png");
-			powerbar->setScaleX(3);
-			powerbar->setScaleY(1.5);
-			powerbar->setRotation(0);
-			powerbar->setProgress(0);
-            // 相对于坦克来设置对应的powerbar位置
-            powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
-			this->getParent()->addChild(this->powerbar);
+                // 按下的时候添加力度进度条到场景里面去
+                // 创建蓄力条
+                powerbar = Progress::create("progressBg.png", "blood.png");
+                powerbar->setScaleX(3);
+                powerbar->setScaleY(1.5);
+                powerbar->setRotation(0);
+                powerbar->setProgress(0);
+                // 相对于坦克来设置对应的powerbar位置
+                powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
+                this->getParent()->addChild(this->powerbar);
 
-            return true; // to indicate that we have consumed it.
+                return true; // to indicate that we have consumed it.
+            }
         }
         return false; // we did not consume this event, pass thru.
     };
@@ -137,12 +139,13 @@ void YellowTank::runAttack()
         // 在这里添加子弹生成,同时设置好物理的刚体属性，旋转发射角度，水平和垂直初速度等等，
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
         while (bullet_count--) {
-            auto b = Bullet::create(this->curr_bullet_name);
-            // 子弹相关属性设置，还需要调整
+            auto b = Bullet::create(this->curr_bullet_name, m_basic_hurt);
+            // �ӵ�����������ã�����Ҫ����
             b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
             b->setRotation(230.0f);
             b->getPhysicsBody()->setVelocity(Vec2(-m_power * 25, m_power*20));
             b->setHurtness(m_power * 2);
+            Global::bullets.push_back(b);
             this->getParent()->addChild(b, 1, 1001); //设一个1001的tag给它，到时候3连发的话再想
 
 			this->schedule(schedule_selector(YellowTank::updateBulletRotation), 0.1);
@@ -158,9 +161,6 @@ void YellowTank::runAttack()
 
     // 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
     this->setDefaultProperty();
-
-    // Global 回合数加一
-    ++Global::turn;
 }
 
 //实验类的实现，具体怎么调用要等到子弹会消失才能做
