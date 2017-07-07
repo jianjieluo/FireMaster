@@ -29,7 +29,9 @@ public:
     void defence_Btn2_click(Ref * sender);
     void triAttack_Btn2_click(Ref * sender);
 
+
     void updateTurnUI(float ft);
+    void updateCollision(float ft);
 
 	CREATE_FUNC(FireMaster);
 
@@ -51,6 +53,8 @@ private:
     PhysicsWorld* m_world;
     int m_turn;
     cocos2d::Label* turnUI;
+
+    Rect m_checkingRects[6];
 };
 
 #endif // __FIRE_MASTER_H__

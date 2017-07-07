@@ -8,7 +8,7 @@ Bullet::Bullet() {}
 Bullet::~Bullet() {}
 
 //根据后期情况这里可能需要改成以frame来进行构建
-Bullet* Bullet::create(const std::string &filename)
+Bullet* Bullet::create(const std::string &filename, int t_hurt)
 {
     Bullet* pSprite = new Bullet();
 
@@ -17,6 +17,7 @@ Bullet* Bullet::create(const std::string &filename)
         pSprite->autorelease();
 
         pSprite->initOptions();
+        pSprite->setHurtness(t_hurt);
 
         return pSprite;
     }

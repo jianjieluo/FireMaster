@@ -7,7 +7,7 @@ class Bullet : public cocos2d::Sprite
 public:
     Bullet();
     ~Bullet();
-    static Bullet* create(const std::string &filename);
+    static Bullet* create(const std::string &filename, int t_hurt);
 
     void initOptions();
 

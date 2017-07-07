@@ -5,6 +5,7 @@
 #include "SimpleAudioEngine.h"
 #include "AppDelegate.h"
 #include "Global.h"
+#include "Debug.h"
 
 #include <string>
 
@@ -17,7 +18,7 @@ void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
     auto scene = Scene::createWithPhysics();
-    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);ddd
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     scene->getPhysicsWorld()->setAutoStep(true);
     scene->getPhysicsWorld()->setGravity(Vec2(0, -300.0f));
     auto layer = FireMaster::create();
@@ -38,12 +39,47 @@ bool FireMaster::init()
 	origin = Director::getInstance()->getVisibleOrigin();
 
 	addSprite();
+    Global::bullets.clear();
     //add yellow tank
     yellowTank = YellowTank::create();
     this->addChild(yellowTank, 1);
     //add blue tank
     blueTank = BlueTank::create();
     this->addChild(blueTank, 1);
+
+    m_checkingRects[4].setRect(yellowTank->getBoundingBox().origin.x, yellowTank->getBoundingBox().origin.y,
+        yellowTank->getContentSize().width, yellowTank->getContentSize().height);
+    m_checkingRects[5].setRect(blueTank->getBoundingBox().origin.x, blueTank->getBoundingBox().origin.y,
+        blueTank->getContentSize().width, blueTank->getContentSize().height);
+
+    // draw debug rectangle
+#ifdef DEBUG
+    Color4F white(1, 1, 1, 1);
+
+    auto rectNode = DrawNode::create();
+    rectNode->drawRect(m_checkingRects[0].origin, m_checkingRects[0].origin + m_checkingRects[0].size, white);
+    this->addChild(rectNode, 2);
+
+    auto rectNode2 = DrawNode::create();
+    rectNode2->drawRect(m_checkingRects[1].origin, m_checkingRects[1].origin + m_checkingRects[1].size, white);
+    this->addChild(rectNode2, 2);
+
+    auto rectNode3 = DrawNode::create();
+    rectNode3->drawRect(m_checkingRects[2].origin, m_checkingRects[2].origin + m_checkingRects[2].size, white);
+    this->addChild(rectNode3, 2);
+
+    auto ground = DrawNode::create();
+    ground->drawRect(m_checkingRects[3].origin, m_checkingRects[3].origin + m_checkingRects[3].size, white);
+    this->addChild(ground, 2);
+
+    //auto ytank = DrawNode::create();
+    //ytank->drawRect(m_checkingRects[4].origin, m_checkingRects[4].origin + m_checkingRects[4].size, white);
+    //this->addChild(ytank, 2);
+
+    //auto btank = DrawNode::create();
+    //btank->drawRect(m_checkingRects[5].origin, m_checkingRects[5].origin + m_checkingRects[5].size, white);
+    //this->addChild(btank, 2);
+#endif
 
 	return true;
 }
@@ -54,14 +90,7 @@ void FireMaster::addSprite() {
 	bgSprite->setPosition(visibleSize / 2);
 	bgSprite->setScale(visibleSize.width / bgSprite->getContentSize().width, visibleSize.height / bgSprite->getContentSize().height);
 	this->addChild(bgSprite, 0);
-
-	//explosion动画展示，到时候删
-	//auto explosion = Sprite::createWithSpriteFrameName("explosion1.png");
-	//explosion->setAnchorPoint(Point(0.5, 0.5));
-	//explosion->setPosition(visibleSize.width/2, visibleSize.height/2);
-	//auto explosionAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation"));
-	//explosion->runAction(RepeatForever::create(explosionAnimate));
-	//this->addChild(explosion, 1);
+    m_checkingRects[3].setRect(0, 0, visibleSize.width, 40);
 
 	//add obstacle
 	obstacle = Sprite::createWithSpriteFrameName("obstacle.png");
@@ -69,14 +98,16 @@ void FireMaster::addSprite() {
 	obstacle->setPosition(visibleSize.width / 2, 120);
 	obstacle->setScale(1.3, 1.4);
 
-    auto obstaclebody = PhysicsBody::createBox(obstacle->getContentSize(), PhysicsMaterial(100.0f, 0.0f, 1.0f));
-    obstaclebody->setCategoryBitmask(0xFFFFFFFF);
-    obstaclebody->setCollisionBitmask(0xFFFFFFFF);
-    obstaclebody->setContactTestBitmask(0xFFFFFFFF);
-    obstaclebody->setDynamic(false);
-    obstacle->setPhysicsBody(obstaclebody);
+    //第二个矩形的起点
+    float orignalx2 = visibleSize.width / 2 - 50;
+    float orignaly2 = 100;
+    //把两个矩形加到数组里面
+    m_checkingRects[0].setRect(obstacle->getBoundingBox().origin.x, obstacle->getBoundingBox().origin.y, 188, 87);
+    m_checkingRects[1].setRect(obstacle->getBoundingBox().origin.x + 20, obstacle->getBoundingBox().origin.y, 137, 130);
+    m_checkingRects[2].setRect(obstacle->getBoundingBox().origin.x + 66, obstacle->getBoundingBox().origin.y, 60, 185);
 
 	this->addChild(obstacle, 1);
+    this->schedule(schedule_selector(FireMaster::updateCollision), 0.01);
 
     //add UI
 	topUI = Sprite::createWithSpriteFrameName("topUI.png");
@@ -90,13 +121,16 @@ void FireMaster::addSprite() {
     turnUI->setPosition(visibleSize.width / 2, visibleSize.height - 180);
     //turnUI->setScale(1.4, 1.3);
     this->addChild(turnUI, 1);
+#ifdef DEBUG
+    this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
+#endif
 
 	//add powerBullet_Btn1
 	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
 	powerBullet_Btn1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
 	powerBullet_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
 	this->addChild(powerBullet_Btn1, 1);
-    this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
+
 
 	//add fix_Btn1
 	fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
@@ -235,10 +269,8 @@ void FireMaster::addSprite() {
     this->addChild(triAttack_Btn2, 1);
 }
 
-
 void FireMaster::updateTurnUI(float ft)
 {
-
     auto curr_turn = std::to_string(Global::turn);
     auto side = ((Global::turn % 2) == 0) ? "right" : "left";
     auto newstr = "Round:" + curr_turn + " " + side;
@@ -246,7 +278,51 @@ void FireMaster::updateTurnUI(float ft)
     turnUI->setString(newstr);
 }
 
+void FireMaster::updateCollision(float ft)
+{
+    if (!Global::bullets.empty()) { 
+        auto b = Global::bullets.front();
+        auto bpos = b->getPosition();
+        auto bbox = b->getBoundingBox();
 
+#ifdef DEBUG
+        Color4F white(1, 1, 1, 1);
+        auto rectNode = DrawNode::create();
+        rectNode->drawRect(bbox.origin, bbox.origin + bbox.size, white);
+        this->addChild(rectNode, 2);
+#endif
+
+
+        if (bpos.x < 0 || bpos.y < 0 || bpos.x > visibleSize.width) {
+            b->removeFromParentAndCleanup(true);
+            Global::bullets.pop_front();
+            ++Global::turn;
+            return;
+        }
+
+        if (m_checkingRects[0].intersectsRect(bbox) || m_checkingRects[1].intersectsRect(bbox)
+            || m_checkingRects[2].intersectsRect(bbox) || m_checkingRects[3].intersectsRect(bbox)) {
+
+            b->removeFromParentAndCleanup(true);
+            Global::bullets.pop_front();
+
+            // run explosion here and clean the bullet
+            auto explosion = Sprite::createWithSpriteFrameName("explosion1.png");
+            explosion->setAnchorPoint(Point(0.5, 0.5));
+            explosion->setPosition(bpos);
+            this->addChild(explosion, 2);
+
+            auto seq = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation")),
+                CallFunc::create(
+                    [explosion]() {
+                explosion->removeFromParentAndCleanup(true);
+                ++Global::turn;
+            }), nullptr);
+
+            explosion->runAction(seq);
+        }
+    }
+}
 
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
