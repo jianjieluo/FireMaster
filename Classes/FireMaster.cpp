@@ -426,13 +426,15 @@ void FireMaster::triAttack_Btn2_click(Ref * sender)
     triAttack_Btn2->runAction(FadeOut::create(0.5));
 }
 
-  //被调度的timer函数
+//被调度的timer函数
 void FireMaster::timer(float a)
 {
 	if (waitClock->isVisible() == true) {
 		auto m = waitClock->getPercentage();
+		/* 调试用
 		CCString* ns = CCString::createWithFormat("m = %f", m);
 		CCLOG(ns->getCString());
+		*/
 		if (m > 0) {
 			m--;
 		}
