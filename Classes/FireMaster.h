@@ -2,7 +2,6 @@
 #define __FIRE_MASTER_H__
 
 #include "cocos2d.h"
-#include "FireMaster.h"
 #include "Progress.h"
 #include "BlueTank.h"
 #include "YellowTank.h"
@@ -20,10 +19,22 @@ public:
     void setPhysicsWorld(PhysicsWorld * world);
     void updateTurnUI(float ft);
     void updateCollision(float ft);
+	void updateBulletRotation(float ft);
+	void updateBulletVelocity(float ft);
+	void refreshRandomWindPower();
+
+
+	void timer(float a);
+
+	void nextTurn();
+	float windPower;
 
 	CREATE_FUNC(FireMaster);
 
 private:
+
+	Progress *wind1, *wind2;
+
     Size visibleSize;
     Vec2 origin;
 
@@ -47,10 +58,7 @@ private:
 	void fix_Btn2_click(Ref * sender);
 	void defence_Btn2_click(Ref * sender);
 	void triAttack_Btn2_click(Ref * sender);
-
-	void timer(float a);
 	ProgressTimer * waitClock;
-	int n = 100;
 
 private:
     PhysicsWorld* m_world;
@@ -58,6 +66,8 @@ private:
     cocos2d::Label* turnUI;
 
     Rect m_checkingRects[6];
+
+	Progress* hp1, * hp2;
 };
 
 #endif // __FIRE_MASTER_H__

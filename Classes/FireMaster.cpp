@@ -7,6 +7,9 @@
 #include "Global.h"
 #include "Debug.h"
 #include <string>
+#include <math.h>
+#include <ctime>
+#include <cstdlib>
 
 using namespace ui;
 using namespace CocosDenshion;
@@ -81,7 +84,13 @@ bool FireMaster::init()
 #endif
 
 	//添加调度器
+	this->schedule(schedule_selector(FireMaster::updateBulletRotation), 0.1);
 	this->schedule(schedule_selector(FireMaster::timer), 0.1);
+	this->schedule(schedule_selector(FireMaster::updateBulletVelocity), 0.1);
+
+	srand(unsigned(time(0))); //设置随机数种子
+
+	nextTurn();
 
 	return true;
 }
@@ -184,25 +193,24 @@ void FireMaster::addSprite() {
 	this->addChild(triAttack_Btn2, 1);
 
 	//add hp1
-	auto hp1 = Progress::create("progressBg.png","blood.png");
+	hp1 = Progress::create("progressBg.png","blood.png");
 	hp1->setPosition(Vec2(215, 569));
 	hp1->setScaleX(11.5);
 	hp1->setScaleY(1.5);
 	hp1->setMidpoint(Point(1, 0.5));
 	this->addChild(hp1, 3);
-	hp1->setProgress(50);
-
+	hp1->setProgress(100);
 
 	//add hp2
-	auto hp2 = Progress::create("progressBg.png", "blood.png");
+	hp2 = Progress::create("progressBg.png", "blood.png");
 	hp2->setPosition(Vec2(745, 569));
 	hp2->setScaleX(11.5);
 	hp2->setScaleY(1.5);
 	this->addChild(hp2, 3);
-	hp2->setProgress(40);
+	hp2->setProgress(100);
 
 	//add windpower1
-	auto wind1 = Progress::create("progressBg.png", "wind.png");
+	wind1 = Progress::create("progressBg.png", "wind.png");
 	wind1->setAnchorPoint(Point(1, 0.5));
 	wind1->setPosition(visibleSize.width / 2 + 1, 506.5);
 	wind1->setScaleX(3.5);
@@ -213,7 +221,7 @@ void FireMaster::addSprite() {
 	wind1->setProgress(0);
 
 	//add windpower2
-	auto wind2 = Progress::create("progressBg.png", "wind.png");
+	wind2 = Progress::create("progressBg.png", "wind.png");
 	wind2->setAnchorPoint(Point(0, 0.5));
 	wind2->setPosition(visibleSize.width / 2 - 1, 506.5);
 	wind2->setScaleX(3.5);
@@ -269,18 +277,62 @@ void FireMaster::addSprite() {
     triAttack_Btn2->setScale(0.5);
     triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
     this->addChild(triAttack_Btn2, 1);
-
-
-	//add waitClock
 	
+	//添加wait clock
 	waitClock = ProgressTimer::create(Sprite::create("imges/waitClock.png"));
-	waitClock->setPosition((Vec2(visibleSize.width /2, visibleSize.height /2)));
 	waitClock->setType(ProgressTimer::Type::RADIAL);
 	waitClock->setMidpoint(Point(0.5, 0.5));
 	waitClock->setScale(1.2);
-	waitClock->setPercentage(100);
-	this->addChild(waitClock, 3);
+	waitClock->setVisible(false);
+	this->addChild(waitClock, 3, "waitClock");
+}
+
+void FireMaster::refreshRandomWindPower() {
+	int start = -4;
+	int end = 4;
+	windPower = CCRANDOM_0_1() * (end - start + 1) + start;  //产生一个从start到end间的随机数
+}
+
+void FireMaster::updateBulletVelocity(float ft) {
+	int F = round(windPower);
+	for (auto bullet : Global::bullets) {
+		if (bullet != NULL) {	
+			auto vX = bullet->getPhysicsBody()->getVelocity().x;
+			auto vY = bullet->getPhysicsBody()->getVelocity().y;
+			//具体加速度参数到时候再改
+			bullet->getPhysicsBody()->setVelocity(Vec2(vX + F * 5, vY));
+		}
+	}
+}
+
+void FireMaster::nextTurn()
+{
+	++Global::turn;
+	int side = Global::turn % 2;
 	
+	//设置风向
+	refreshRandomWindPower();
+	CCString* ns = CCString::createWithFormat("windPower = %f", windPower);
+	CCLOG(ns->getCString());
+
+	
+	//设置风向UI
+	wind1->setProgress(0);
+	wind2->setProgress(0);
+	if (windPower < 0) {
+		wind1->setProgress(round(-windPower) * 25);
+	}
+	else if (windPower > 0) 
+	{
+		wind2->setProgress(round(windPower) * 25);
+	}
+
+
+	waitClock->setPercentage(100);
+	//获取应放置的位置
+	Vec2 pos = side == 0 ? yellowTank->getPosition() : blueTank->getPosition();
+	waitClock->setPosition((Vec2(pos.x, pos.y + 100)));
+	waitClock->setVisible(true);
 }
 
 void FireMaster::updateTurnUI(float ft)
@@ -290,6 +342,20 @@ void FireMaster::updateTurnUI(float ft)
     auto newstr = "Round:" + curr_turn + " " + side;
     //auto newstr = "Turn: 0";
     turnUI->setString(newstr);
+}
+
+void FireMaster::updateBulletRotation(float t) {
+	for (auto bullet : Global::bullets) {
+		if (bullet != NULL) {
+			//向量标准化
+			auto vPoint = ccpNormalize(bullet->getPhysicsBody()->getVelocity());
+			//算出旋转的弧度
+			auto radians = atan2f(vPoint.y, vPoint.x);
+			//将弧度转换成角度  
+			float degree = CC_RADIANS_TO_DEGREES(radians);
+			bullet->setRotation(-degree); //由于cocos2dx的setRotation顺时针旋转，取个负号
+		}
+	}
 }
 
 void FireMaster::updateCollision(float ft)
@@ -310,7 +376,7 @@ void FireMaster::updateCollision(float ft)
         if (bpos.x < 0 || bpos.y < 0 || bpos.x > visibleSize.width) {
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
-            ++Global::turn;
+			nextTurn();
             return;
         }
 
@@ -319,6 +385,31 @@ void FireMaster::updateCollision(float ft)
         bool isHitOpponent = (Global::turn % 2 == 1) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
 
         if (isCrashwithBg || isHitOpponent) {
+			//爆炸范围
+			Rect rect = Rect(bpos.x - 125, bpos.y - 125, 250, 250);
+			//判断子弹和坦克中心点距离
+			float distance;
+			//炸到了yellowtank
+			if (m_checkingRects[4].intersectsRect(rect)) {
+				distance =sqrt((bpos.x - yellowTank->getPosition().x)*(bpos.x - yellowTank->getPosition().x)
+					+(bpos.y - yellowTank->getPosition().y)*(bpos.y - yellowTank->getPosition().y));
+
+				float currentHp = hp2->getPercentage();
+				//0.6是暂定的，调整这个比例可以控制扣血的量
+				currentHp -= 0.6 * (31- distance/10 );
+				hp2->setProgress(currentHp);
+			}
+
+			//炸到了bluetank
+			if (m_checkingRects[5].intersectsRect(rect)) {
+				distance = sqrt((bpos.x - blueTank->getPosition().x)*(bpos.x - blueTank->getPosition().x)
+					+ (bpos.y - blueTank->getPosition().y)*(bpos.y - blueTank->getPosition().y));
+
+				float currentHp = hp1->getPercentage();
+				//0.6是暂定的，调整这个比例可以控制扣血的量
+				currentHp -= 0.6 * (31 - distance / 10);
+				hp1->setProgress(currentHp);
+			}
 
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
@@ -337,6 +428,9 @@ void FireMaster::updateCollision(float ft)
 
                 // 爆炸之后才能进入下一个回合
                 ++Global::turn;
+                    [explosion, this]() {
+                explosion->removeFromParentAndCleanup(true);
+				FireMaster::nextTurn();
             }), nullptr);
 
             explosion->runAction(seq);
@@ -378,10 +472,24 @@ void FireMaster::triAttack_Btn2_click(Ref * sender)
     triAttack_Btn2->runAction(FadeOut::create(0.5));
 }
 
-  //被调度的timer函数
+//被调度的timer函数
 void FireMaster::timer(float a)
 {
-	n--;
-	waitClock->setPercentage(n);
+	if (waitClock->isVisible() == true) {
+		auto m = waitClock->getPercentage();
+		/* 调试用
+		CCString* ns = CCString::createWithFormat("m = %f", m);
+		CCLOG(ns->getCString());
+		*/
+		if (m > 0) {
+			m--;
+		}
+		else {
+			waitClock->setVisible(false);
+			nextTurn();
+			return;
+		}
+		waitClock->setPercentage(m);
+	}
 }
 
