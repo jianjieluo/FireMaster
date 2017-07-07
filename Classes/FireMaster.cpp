@@ -47,9 +47,9 @@ bool FireMaster::init()
     this->addChild(blueTank, 1);
 
     m_checkingRects[4].setRect(yellowTank->getBoundingBox().origin.x, yellowTank->getBoundingBox().origin.y,
-        yellowTank->getBoundingBox().size.width, yellowTank->getBoundingBox().size.height-30);
+        yellowTank->getBoundingBox().size.width, yellowTank->getBoundingBox().size.height - 40);
     m_checkingRects[5].setRect(blueTank->getBoundingBox().origin.x, blueTank->getBoundingBox().origin.y,
-        blueTank->getBoundingBox().size.width, blueTank->getBoundingBox().size.height - 30);
+        blueTank->getBoundingBox().size.width, blueTank->getBoundingBox().size.height - 40);
 
     // draw debug rectangle
 #ifdef DEBUG
