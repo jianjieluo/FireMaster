@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "Global.h"
 #include "Progress.h"
+#include "FireMaster.h"
 USING_NS_CC;
 
 using namespace cocos2d;
@@ -60,8 +61,14 @@ void BlueTank::addTouchListener()
                 m_istouch = true;//按钮按下
                 this->schedule(schedule_selector(BlueTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
-                                                                                   // 按下的时候添加力度进度条到场景里面去
-                                                                                   // 创建蓄力条，先用label代替
+				//按下取消等待计时器
+				auto clockUI = this->getParent()->getChildByName("waitClock");
+				if (clockUI != NULL) {
+					clockUI->setVisible(false);
+				}
+
+                // 按下的时候添加力度进度条到场景里面去
+				// 创建蓄力条，先用label代替
                 powerbar = Progress::create("progressBg.png", "blood.png");
                 powerbar->setScaleX(3);
                 powerbar->setScaleY(1.5);

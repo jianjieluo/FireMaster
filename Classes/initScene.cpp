@@ -60,7 +60,7 @@ bool initScene::init()
 	
 	//play bgm
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bgm.mp3", true);
-	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5f);
+	SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.1f);
     return true;
 }
 

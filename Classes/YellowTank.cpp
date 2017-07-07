@@ -2,8 +2,7 @@
 #include "Global.h"
 #include "Progress.h"
 #include "AppDelegate.h"
-#include <iostream>
-#include <sstream>
+#include "FireMaster.h"
 
 USING_NS_CC;
 
@@ -65,6 +64,12 @@ void YellowTank::addTouchListener()
                 m_power = 0;
                 m_istouch = true;//按钮按下
                 this->schedule(schedule_selector(YellowTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
+
+				//按下取消等待计时器
+				auto clockUI = this->getParent()->getChildByName("waitClock");
+				if (clockUI != NULL) {
+					clockUI->setVisible(false);
+				}
 
                 // 按下的时候添加力度进度条到场景里面去
                 // 创建蓄力条
@@ -140,15 +145,12 @@ void YellowTank::runAttack()
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
         while (bullet_count--) {
             auto b = Bullet::create(this->curr_bullet_name, m_basic_hurt);
-            // �ӵ�����������ã�����Ҫ����
             b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
             b->setRotation(230.0f);
             b->getPhysicsBody()->setVelocity(Vec2(-m_power * 25, m_power*20));
             b->setHurtness(m_power * 2);
             Global::bullets.push_back(b);
-            this->getParent()->addChild(b, 1, 1001); //设一个1001的tag给它，到时候3连发的话再想
-
-			this->schedule(schedule_selector(YellowTank::updateBulletRotation), 0.1);
+            this->getParent()->addChild(b, 1);
         }
     });
 
@@ -161,25 +163,6 @@ void YellowTank::runAttack()
 
     // 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
     this->setDefaultProperty();
-}
-
-//实验类的实现，具体怎么调用要等到子弹会消失才能做
-void YellowTank::updateBulletRotation(float t) {
-	CCString* ns;
-	auto bullet = this->getParent()->getChildByTag(1001);
-	if (bullet != NULL) {
-		//向量标准化
-		auto vPoint = ccpNormalize(bullet->getPhysicsBody()->getVelocity());
-		//算出旋转的弧度
-		auto radians = atan2f(vPoint.y, vPoint.x);
-		//将弧度转换成角度  
-		float degree = CC_RADIANS_TO_DEGREES(radians);
-		bullet->setRotation(-degree); //由于cocos2dx的setRotation顺时针旋转，取个负号
-	}
-}
-
-void YellowTank::removeBullet() {
-
 }
 
 void YellowTank::setDefaultProperty()

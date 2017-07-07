@@ -81,7 +81,10 @@ bool FireMaster::init()
 #endif
 
 	//添加调度器
+	this->schedule(schedule_selector(FireMaster::updateBulletRotation), 0.1);
 	this->schedule(schedule_selector(FireMaster::timer), 0.1);
+
+	nextTurn();
 
 	return true;
 }
@@ -269,18 +272,26 @@ void FireMaster::addSprite() {
     triAttack_Btn2->setScale(0.5);
     triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
     this->addChild(triAttack_Btn2, 1);
-
-
-	//add waitClock
 	
+	//添加wait clock
 	waitClock = ProgressTimer::create(Sprite::create("imges/waitClock.png"));
-	waitClock->setPosition((Vec2(visibleSize.width /2, visibleSize.height /2)));
 	waitClock->setType(ProgressTimer::Type::RADIAL);
 	waitClock->setMidpoint(Point(0.5, 0.5));
 	waitClock->setScale(1.2);
-	waitClock->setPercentage(100);
-	this->addChild(waitClock, 3);
+	waitClock->setVisible(false);
+	this->addChild(waitClock, 3, "waitClock");
+}
+
+void FireMaster::nextTurn()
+{
+	++Global::turn;
+	int side = Global::turn % 2;
 	
+	waitClock->setPercentage(100);
+	//获取位置
+	Vec2 pos = side == 0 ? yellowTank->getPosition() : blueTank->getPosition();
+	waitClock->setPosition((Vec2(pos.x, pos.y + 100)));
+	waitClock->setVisible(true);
 }
 
 void FireMaster::updateTurnUI(float ft)
@@ -290,6 +301,21 @@ void FireMaster::updateTurnUI(float ft)
     auto newstr = "Round:" + curr_turn + " " + side;
     //auto newstr = "Turn: 0";
     turnUI->setString(newstr);
+}
+
+void FireMaster::updateBulletRotation(float t) {
+	CCString* ns;
+	for (auto bullet : Global::bullets) {
+		if (bullet != NULL) {
+			//向量标准化
+			auto vPoint = ccpNormalize(bullet->getPhysicsBody()->getVelocity());
+			//算出旋转的弧度
+			auto radians = atan2f(vPoint.y, vPoint.x);
+			//将弧度转换成角度  
+			float degree = CC_RADIANS_TO_DEGREES(radians);
+			bullet->setRotation(-degree); //由于cocos2dx的setRotation顺时针旋转，取个负号
+		}
+	}
 }
 
 void FireMaster::updateCollision(float ft)
@@ -310,7 +336,7 @@ void FireMaster::updateCollision(float ft)
         if (bpos.x < 0 || bpos.y < 0 || bpos.x > visibleSize.width) {
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
-            ++Global::turn;
+			nextTurn();
             return;
         }
 
@@ -331,9 +357,9 @@ void FireMaster::updateCollision(float ft)
 
             auto seq = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation")),
                 CallFunc::create(
-                    [explosion]() {
+                    [explosion, this]() {
                 explosion->removeFromParentAndCleanup(true);
-                ++Global::turn;
+				FireMaster::nextTurn();
             }), nullptr);
 
             explosion->runAction(seq);
@@ -378,7 +404,19 @@ void FireMaster::triAttack_Btn2_click(Ref * sender)
   //被调度的timer函数
 void FireMaster::timer(float a)
 {
-	n--;
-	waitClock->setPercentage(n);
+	if (waitClock->isVisible() == true) {
+		auto m = waitClock->getPercentage();
+		CCString* ns = CCString::createWithFormat("m = %f", m);
+		CCLOG(ns->getCString());
+		if (m > 0) {
+			m--;
+		}
+		else {
+			waitClock->setVisible(false);
+			nextTurn();
+			return;
+		}
+		waitClock->setPercentage(m);
+	}
 }
 

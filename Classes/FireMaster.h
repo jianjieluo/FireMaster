@@ -2,7 +2,6 @@
 #define __FIRE_MASTER_H__
 
 #include "cocos2d.h"
-#include "FireMaster.h"
 #include "Progress.h"
 #include "BlueTank.h"
 #include "YellowTank.h"
@@ -20,6 +19,11 @@ public:
     void setPhysicsWorld(PhysicsWorld * world);
     void updateTurnUI(float ft);
     void updateCollision(float ft);
+	void updateBulletRotation(float ft);
+
+	void timer(float a);
+
+	void nextTurn();
 
 	CREATE_FUNC(FireMaster);
 
@@ -48,9 +52,7 @@ private:
 	void defence_Btn2_click(Ref * sender);
 	void triAttack_Btn2_click(Ref * sender);
 
-	void timer(float a);
 	ProgressTimer * waitClock;
-	int n = 100;
 
 private:
     PhysicsWorld* m_world;

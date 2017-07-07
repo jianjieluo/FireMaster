@@ -35,10 +35,6 @@ public:
     void runAttack();
     void setDefaultProperty();
 
-	//子弹行为
-	void updateBulletRotation(float t);
-	void removeBullet();
-
 private:
     // const 表示该精灵的固有属性
     // 按下的时候力度增长的速率
