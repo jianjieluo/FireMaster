@@ -20,14 +20,21 @@ public:
     void updateTurnUI(float ft);
     void updateCollision(float ft);
 	void updateBulletRotation(float ft);
+	void updateBulletVelocity(float ft);
+	void refreshRandomWindPower();
+
 
 	void timer(float a);
 
 	void nextTurn();
+	float windPower;
 
 	CREATE_FUNC(FireMaster);
 
 private:
+
+	Progress *wind1, *wind2;
+
     Size visibleSize;
     Vec2 origin;
 
@@ -51,7 +58,6 @@ private:
 	void fix_Btn2_click(Ref * sender);
 	void defence_Btn2_click(Ref * sender);
 	void triAttack_Btn2_click(Ref * sender);
-
 	ProgressTimer * waitClock;
 
 private:

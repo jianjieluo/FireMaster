@@ -8,6 +8,8 @@
 #include "Debug.h"
 #include <string>
 #include <math.h>
+#include <ctime>
+#include <cstdlib>
 
 using namespace ui;
 using namespace CocosDenshion;
@@ -84,6 +86,9 @@ bool FireMaster::init()
 	//添加调度器
 	this->schedule(schedule_selector(FireMaster::updateBulletRotation), 0.1);
 	this->schedule(schedule_selector(FireMaster::timer), 0.1);
+	this->schedule(schedule_selector(FireMaster::updateBulletVelocity), 0.1);
+
+	srand(unsigned(time(0))); //设置随机数种子
 
 	nextTurn();
 
@@ -205,7 +210,7 @@ void FireMaster::addSprite() {
 	hp2->setProgress(100);
 
 	//add windpower1
-	auto wind1 = Progress::create("progressBg.png", "wind.png");
+	wind1 = Progress::create("progressBg.png", "wind.png");
 	wind1->setAnchorPoint(Point(1, 0.5));
 	wind1->setPosition(visibleSize.width / 2 + 1, 506.5);
 	wind1->setScaleX(3.5);
@@ -216,7 +221,7 @@ void FireMaster::addSprite() {
 	wind1->setProgress(0);
 
 	//add windpower2
-	auto wind2 = Progress::create("progressBg.png", "wind.png");
+	wind2 = Progress::create("progressBg.png", "wind.png");
 	wind2->setAnchorPoint(Point(0, 0.5));
 	wind2->setPosition(visibleSize.width / 2 - 1, 506.5);
 	wind2->setScaleX(3.5);
@@ -282,13 +287,49 @@ void FireMaster::addSprite() {
 	this->addChild(waitClock, 3, "waitClock");
 }
 
+void FireMaster::refreshRandomWindPower() {
+	int start = -4;
+	int end = 4;
+	windPower = CCRANDOM_0_1() * (end - start + 1) + start;  //产生一个从start到end间的随机数
+}
+
+void FireMaster::updateBulletVelocity(float ft) {
+	int F = round(windPower);
+	for (auto bullet : Global::bullets) {
+		if (bullet != NULL) {	
+			auto vX = bullet->getPhysicsBody()->getVelocity().x;
+			auto vY = bullet->getPhysicsBody()->getVelocity().y;
+			//具体加速度参数到时候再改
+			bullet->getPhysicsBody()->setVelocity(Vec2(vX + F * 5, vY));
+		}
+	}
+}
+
 void FireMaster::nextTurn()
 {
 	++Global::turn;
 	int side = Global::turn % 2;
 	
+	//设置风向
+	refreshRandomWindPower();
+	CCString* ns = CCString::createWithFormat("windPower = %f", windPower);
+	CCLOG(ns->getCString());
+
+	
+	//设置风向UI
+	wind1->setProgress(0);
+	wind2->setProgress(0);
+	if (windPower < 0) {
+		wind1->setProgress(round(-windPower) * 25);
+	}
+	else if (windPower > 0) 
+	{
+		wind2->setProgress(round(windPower) * 25);
+	}
+
+
 	waitClock->setPercentage(100);
-	//获取位置
+	//获取应放置的位置
 	Vec2 pos = side == 0 ? yellowTank->getPosition() : blueTank->getPosition();
 	waitClock->setPosition((Vec2(pos.x, pos.y + 100)));
 	waitClock->setVisible(true);
@@ -304,7 +345,6 @@ void FireMaster::updateTurnUI(float ft)
 }
 
 void FireMaster::updateBulletRotation(float t) {
-	CCString* ns;
 	for (auto bullet : Global::bullets) {
 		if (bullet != NULL) {
 			//向量标准化
