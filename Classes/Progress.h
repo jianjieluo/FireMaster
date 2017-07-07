@@ -21,6 +21,8 @@ public:
 
 	void setProgress(float percentage) { _fill->setPercentage(percentage); }
 
+	float getPercentage() {return _fill->getPercentage(); }
+
 private:
 	ProgressTimer* _fill;
 };
