@@ -1,6 +1,7 @@
 #pragma once
-
+#include "Progress.h"
 #include "cocos2d.h"
+#include "Bullet.h"
 #include <string>
 
 class YellowTank : public cocos2d::Sprite
@@ -34,6 +35,10 @@ public:
     void runAttack();
     void setDefaultProperty();
 
+	//子弹行为
+	void updateBulletRotation(float t);
+	void removeBullet();
+
 private:
     // const 表示该精灵的固有属性
     // 按下的时候力度增长的速率
@@ -46,5 +51,5 @@ private:
     // 蓄力系统的相关设置
     bool m_istouch;
     // 蓄力UI
-    cocos2d::Label* powerbar;
+    Progress* powerbar;
 };

@@ -2,6 +2,7 @@
 
 #include "cocos2d.h"
 #include <string>
+#include "Progress.h"
 
 class BlueTank : public cocos2d::Sprite
 {
@@ -46,5 +47,5 @@ private:
     // 蓄力系统的相关设置
     bool m_istouch;
     // 蓄力UI
-    cocos2d::Label* powerbar;
+	Progress* powerbar;
 };

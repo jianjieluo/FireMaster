@@ -1,7 +1,7 @@
-#include "BlueTank.h"
+ï»¿#include "BlueTank.h"
 #include "Bullet.h"
 #include "Global.h"
-
+#include "Progress.h"
 USING_NS_CC;
 
 using namespace cocos2d;
@@ -35,7 +35,7 @@ void BlueTank::initOptions()
     this->setPosition(100, 100);
     this->setScale(tankScaleSize);
 
-    // set ÎïÀíÊôĞÔ£¬Á´½Ó¸ÕÌå
+    // set ç‰©ç†å±æ€§ï¼Œé“¾æ¥åˆšä½“
 }
 
 void BlueTank::addEvents() {
@@ -47,7 +47,7 @@ void BlueTank::addTouchListener()
     auto listener = cocos2d::EventListenerTouchOneByOne::create();
     listener->setSwallowTouches(true);
 
-    // ¿ªÊ¼°´ÏÂµÄ»Øµ÷º¯Êı
+    // å¼€å§‹æŒ‰ä¸‹çš„å›è°ƒå‡½æ•°
     listener->onTouchBegan = [&](cocos2d::Touch* touch, cocos2d::Event* event)
     {
         cocos2d::Vec2 p = touch->getLocation();
@@ -56,25 +56,29 @@ void BlueTank::addTouchListener()
         if (rect.containsPoint(p))
         {
             m_power = 0;
-            m_istouch = true;//°´Å¥°´ÏÂ
-            this->schedule(schedule_selector(BlueTank::updatePowerbar), 0.1);//ĞîÁ¦Ê±¼äÅĞ¶Ï£¬Ã¿¸ô0.1Ãëµ÷¶ÈÒ»´Î
+            m_istouch = true;//æŒ‰é’®æŒ‰ä¸‹
+            this->schedule(schedule_selector(BlueTank::updatePowerbar), 0.1);//è“„åŠ›æ—¶é—´åˆ¤æ–­ï¼Œæ¯éš”0.1ç§’è°ƒåº¦ä¸€æ¬¡
 
-                                                                               // °´ÏÂµÄÊ±ºòÌí¼ÓÁ¦¶È½ø¶ÈÌõµ½³¡¾°ÀïÃæÈ¥
-                                                                               // ´´½¨ĞîÁ¦Ìõ£¬ÏÈÓÃlabel´úÌæ
-            powerbar = Label::createWithTTF("0", "fonts/arial.ttf", 20);
-            // Ïà¶ÔÓÚÌ¹¿ËÀ´ÉèÖÃ¶ÔÓ¦µÄpowerbarÎ»ÖÃ
-            powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
-            this->getParent()->addChild(this->powerbar);
+                                                                               // æŒ‰ä¸‹çš„æ—¶å€™æ·»åŠ åŠ›åº¦è¿›åº¦æ¡åˆ°åœºæ™¯é‡Œé¢å»
+                                                                               // åˆ›å»ºè“„åŠ›æ¡ï¼Œå…ˆç”¨labelä»£æ›¿
+			powerbar = Progress::create("progressBg.png", "blood.png");
+			powerbar->setScaleX(3);
+			powerbar->setScaleY(1.5);
+			powerbar->setRotation(180);
+			powerbar->setProgress(0);
+			// ç›¸å¯¹äºå¦å…‹æ¥è®¾ç½®å¯¹åº”çš„powerbarä½ç½®
+			powerbar->setPosition(this->getPosition().x, this->getPosition().y + 100);
+			this->getParent()->addChild(this->powerbar);
 
             return true; // to indicate that we have consumed it.
         }
         return false; // we did not consume this event, pass thru.
     };
 
-    // ½áÊø°´ÏÂµÄ»Øµ÷º¯Êı
+    // ç»“æŸæŒ‰ä¸‹çš„å›è°ƒå‡½æ•°
     listener->onTouchEnded = [=](cocos2d::Touch* touch, cocos2d::Event* event)
     {
-        // °ÑĞîÁ¦Ìõ¸øÈ¥µô
+        // æŠŠè“„åŠ›æ¡ç»™å»æ‰
         this->unschedule(schedule_selector(BlueTank::updatePowerbar));
         this->getParent()->removeChild(powerbar);
 
@@ -96,26 +100,63 @@ void BlueTank::updatePowerbar(float ft)
 {
     if (m_istouch)
     {
-        // °´ÕÕÔö³¤ËÙ¶ÈÀ´ĞîÁ¦£¬²¢ÇÒ·´À¡ÔÚUIÉÏÃæ
-        m_power += m_pressv;
-        auto temp = std::to_string(m_power);
-        powerbar->setString(temp);
+        // æŒ‰ç…§å¢é•¿é€Ÿåº¦æ¥è“„åŠ›ï¼Œå¹¶ä¸”åé¦ˆåœ¨UIä¸Šé¢
+		m_power += m_pressv;
+		powerbar->setProgress(5 * m_power);
     }
 }
 
 void BlueTank::runAttack()
 {
     auto fireAnimate = CallFunc::create([&]() {
-        // ÔÚÕâÀïÌí¼ÓÄÇ¸ö·¢ÉäµÄboomµÄ¶¯»­£¬ÉèÖÃºÃÎ»ÖÃ£¬Ìí¼Ó£¬ÔËĞĞ¶¯»­£¬ÒÆ³ı
+        // åœ¨è¿™é‡Œæ·»åŠ é‚£ä¸ªå‘å°„çš„boomçš„åŠ¨ç”»ï¼Œè®¾ç½®å¥½ä½ç½®ï¼Œæ·»åŠ ï¼Œè¿è¡ŒåŠ¨ç”»ï¼Œç§»é™¤
+		auto boom = Sprite::createWithSpriteFrameName("fire1.png");
+		boom->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
+
+		this->getParent()->addChild(boom, 2, "boom"); // è®¾ç½®ä¸€ä¸ªåå­—ï¼Œä¾¿äºè¿½è¸ª
+
+													  // å»æ‰çˆ†ç‚¸åçš„æ•ˆæœ
+		auto s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")),
+			CallFunc::create(
+				[&]() {
+			this->getParent()->getChildByName("boom")->removeAllChildrenWithCleanup(true);
+			this->getParent()->getChildByName("boom")->removeFromParentAndCleanup(true);
+			//this->getParent()->getChildByName("boom")->removeFromParent();
+		}
+		), nullptr);
+		boom->runAction(s);
     });
 
     auto launch = CallFunc::create([&]() {
-        // ÔÚÕâÀïÌí¼Ó×Óµ¯Éú³É,Í¬Ê±ÉèÖÃºÃÎïÀíµÄ¸ÕÌåÊôĞÔ£¬Ğı×ª·¢Éä½Ç¶È£¬Ë®Æ½ºÍ´¹Ö±³õËÙ¶ÈµÈµÈ£¬
-        // ÀûÓÃm_powerÉèÖÃºÃ×Óµ¯µÄÉ±ÉËÁ¦¡£ÔÚFireMaster³¡¾°ÀàÀïÃæ½øĞĞµ÷¶È¼ì²âÅö×²¡£
+        // åœ¨è¿™é‡Œæ·»åŠ å­å¼¹ç”Ÿæˆ,åŒæ—¶è®¾ç½®å¥½ç‰©ç†çš„åˆšä½“å±æ€§ï¼Œæ—‹è½¬å‘å°„è§’åº¦ï¼Œæ°´å¹³å’Œå‚ç›´åˆé€Ÿåº¦ç­‰ç­‰ï¼Œ
+        // åˆ©ç”¨m_powerè®¾ç½®å¥½å­å¼¹çš„æ€ä¼¤åŠ›ã€‚åœ¨FireMasteråœºæ™¯ç±»é‡Œé¢è¿›è¡Œè°ƒåº¦æ£€æµ‹ç¢°æ’ã€‚
+		while (bullet_count--) {
+			auto b = Bullet::create(this->curr_bullet_name);
+			// å­å¼¹ç›¸å…³å±æ€§è®¾ç½®ï¼Œè¿˜éœ€è¦è°ƒæ•´
+			b->setPosition(this->getPosition().x + 20, this->getPosition().y + 40);
+			b->setRotation(-50.0f);
+			b->getPhysicsBody()->setVelocity(Vec2(m_power * 25, m_power * 20));
+			b->setHurtness(m_power * 2);
+
+			this->getParent()->addChild(b, 1);
+		}
     });
 
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
+	auto afterAttackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAfterAttackAnimation"));
 
-	auto s = Sequence::create(attackAnimate, fireAnimate, launch, nullptr);
+	auto s = Sequence::create(attackAnimate, fireAnimate, launch, DelayTime::create(0.5f), afterAttackAnimate, nullptr);
     this->runAction(s);
+
+	// è®¾ç½®å¥½ä¸‹ä¸€æ¬¡çš„å±æ€§ï¼Œè¿™é‡Œé¢çš„å±æ€§å¯ä»¥åœ¨åœºæ™¯é€šè¿‡ç‚¹å‡»æŒ‰é’®æ¥æ”¹å˜
+	this->setDefaultProperty();
+
+	// Global å›åˆæ•°åŠ ä¸€
+	++Global::turn;
+}
+
+void BlueTank::setDefaultProperty()
+{
+	curr_bullet_name = default_bullet_name;
+	bullet_count = 1;
 }

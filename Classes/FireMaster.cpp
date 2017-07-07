@@ -6,7 +6,6 @@
 #include "AppDelegate.h"
 #include "Global.h"
 #include "Debug.h"
-
 #include <string>
 
 using namespace ui;
@@ -80,6 +79,9 @@ bool FireMaster::init()
     //btank->drawRect(m_checkingRects[5].origin, m_checkingRects[5].origin + m_checkingRects[5].size, white);
     //this->addChild(btank, 2);
 #endif
+
+	//添加调度器
+	this->schedule(schedule_selector(FireMaster::timer), 0.1);
 
 	return true;
 }
@@ -267,6 +269,18 @@ void FireMaster::addSprite() {
     triAttack_Btn2->setScale(0.5);
     triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
     this->addChild(triAttack_Btn2, 1);
+
+
+	//add waitClock
+	
+	waitClock = ProgressTimer::create(Sprite::create("imges/waitClock.png"));
+	waitClock->setPosition((Vec2(visibleSize.width /2, visibleSize.height /2)));
+	waitClock->setType(ProgressTimer::Type::RADIAL);
+	waitClock->setMidpoint(Point(0.5, 0.5));
+	waitClock->setScale(1.2);
+	waitClock->setPercentage(100);
+	this->addChild(waitClock, 3);
+	
 }
 
 void FireMaster::updateTurnUI(float ft)
@@ -357,3 +371,11 @@ void FireMaster::triAttack_Btn2_click(Ref * sender)
 {
     triAttack_Btn2->runAction(FadeOut::create(0.5));
 }
+
+  //被调度的timer函数
+void FireMaster::timer(float a)
+{
+	n--;
+	waitClock->setPercentage(n);
+}
+

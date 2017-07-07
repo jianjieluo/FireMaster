@@ -3,6 +3,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
+#include "introductionPage.h"
 
 using namespace CocosDenshion;
 USING_NS_CC;
@@ -45,9 +46,17 @@ bool initScene::init()
 
 	//add start button
 	auto startBtn = Button::create("imges/startButton3.png", "imges/startButton2.png");
-	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height /2));
+	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height /2 + 30));
 	startBtn->addClickEventListener(CC_CALLBACK_1(initScene::StartBtn_click, this));
+	startBtn->setScale(0.9);
 	this->addChild(startBtn, 1);
+
+	//add introduction button
+	auto introductionBtn = Button::create("imges/howToPlayBtn2.png", "imges/howToPlayBtn.png");
+	introductionBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 - 80));
+	introductionBtn->addClickEventListener(CC_CALLBACK_1(initScene::introductionBtn_click, this));
+	introductionBtn->setScale(1.2);
+	this->addChild(introductionBtn, 1);
 	
 	//play bgm
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bgm.mp3", true);
@@ -58,4 +67,9 @@ bool initScene::init()
 void initScene::StartBtn_click(Ref * sender) {
     SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
 	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, FireMaster::createScene()));
+}
+
+void initScene::introductionBtn_click(Ref* sender) {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, introductionPage::createScene()));
 }

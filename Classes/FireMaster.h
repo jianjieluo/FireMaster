@@ -18,18 +18,6 @@ public:
 	virtual bool init();
 
     void setPhysicsWorld(PhysicsWorld * world);
-    void addSprite();
-
-    void powerBullet_Btn1_click(Ref * sender);
-    void fix_Btn1_click(Ref * sender);
-    void defence_Btn1_click(Ref * sender);
-    void triAttack_Btn1_click(Ref * sender);
-    void powerBullet_Btn2_click(Ref * sender);
-    void fix_Btn2_click(Ref * sender);
-    void defence_Btn2_click(Ref * sender);
-    void triAttack_Btn2_click(Ref * sender);
-
-
     void updateTurnUI(float ft);
     void updateCollision(float ft);
 
@@ -48,6 +36,21 @@ private:
 	ProgressTimer *pT1,*pT2,*wind;
     bool istouch;
 
+	void addSprite();
+
+	void powerBullet_Btn1_click(Ref * sender);
+	void fix_Btn1_click(Ref * sender);
+	void defence_Btn1_click(Ref * sender);
+	void triAttack_Btn1_click(Ref * sender);
+	
+	void powerBullet_Btn2_click(Ref * sender);
+	void fix_Btn2_click(Ref * sender);
+	void defence_Btn2_click(Ref * sender);
+	void triAttack_Btn2_click(Ref * sender);
+
+	void timer(float a);
+	ProgressTimer * waitClock;
+	int n = 100;
 
 private:
     PhysicsWorld* m_world;
