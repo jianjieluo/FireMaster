@@ -47,9 +47,9 @@ bool FireMaster::init()
     this->addChild(blueTank, 1);
 
     m_checkingRects[4].setRect(yellowTank->getBoundingBox().origin.x, yellowTank->getBoundingBox().origin.y,
-        yellowTank->getContentSize().width, yellowTank->getContentSize().height);
+        yellowTank->getBoundingBox().size.width, yellowTank->getBoundingBox().size.height-30);
     m_checkingRects[5].setRect(blueTank->getBoundingBox().origin.x, blueTank->getBoundingBox().origin.y,
-        blueTank->getContentSize().width, blueTank->getContentSize().height);
+        blueTank->getBoundingBox().size.width, blueTank->getBoundingBox().size.height - 30);
 
     // draw debug rectangle
 #ifdef DEBUG
@@ -71,13 +71,13 @@ bool FireMaster::init()
     ground->drawRect(m_checkingRects[3].origin, m_checkingRects[3].origin + m_checkingRects[3].size, white);
     this->addChild(ground, 2);
 
-    //auto ytank = DrawNode::create();
-    //ytank->drawRect(m_checkingRects[4].origin, m_checkingRects[4].origin + m_checkingRects[4].size, white);
-    //this->addChild(ytank, 2);
+    auto ytank = DrawNode::create();
+    ytank->drawRect(m_checkingRects[4].origin, m_checkingRects[4].origin + m_checkingRects[4].size, white);
+    this->addChild(ytank, 2);
 
-    //auto btank = DrawNode::create();
-    //btank->drawRect(m_checkingRects[5].origin, m_checkingRects[5].origin + m_checkingRects[5].size, white);
-    //this->addChild(btank, 2);
+    auto btank = DrawNode::create();
+    btank->drawRect(m_checkingRects[5].origin, m_checkingRects[5].origin + m_checkingRects[5].size, white);
+    this->addChild(btank, 2);
 #endif
 
 	//添加调度器
@@ -299,7 +299,7 @@ void FireMaster::updateCollision(float ft)
         auto bpos = b->getPosition();
         auto bbox = b->getBoundingBox();
 
-#ifdef DEBUG
+#ifdef BULLETDEBUG
         Color4F white(1, 1, 1, 1);
         auto rectNode = DrawNode::create();
         rectNode->drawRect(bbox.origin, bbox.origin + bbox.size, white);
@@ -314,8 +314,11 @@ void FireMaster::updateCollision(float ft)
             return;
         }
 
-        if (m_checkingRects[0].intersectsRect(bbox) || m_checkingRects[1].intersectsRect(bbox)
-            || m_checkingRects[2].intersectsRect(bbox) || m_checkingRects[3].intersectsRect(bbox)) {
+        bool isCrashwithBg = m_checkingRects[0].intersectsRect(bbox) || m_checkingRects[1].intersectsRect(bbox)
+            || m_checkingRects[2].intersectsRect(bbox) || m_checkingRects[3].intersectsRect(bbox);
+        bool isHitOpponent = (Global::turn % 2 == 1) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
+
+        if (isCrashwithBg || isHitOpponent) {
 
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
