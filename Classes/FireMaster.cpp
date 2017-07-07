@@ -371,6 +371,9 @@ void FireMaster::updateCollision(float ft)
         bool isHitOpponent = (Global::turn % 2 == 1) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
 
         if (isCrashwithBg || isHitOpponent) {
+			//爆炸音效
+			SimpleAudioEngine::getInstance()->playEffect("music/explosion.wav");
+
 			//爆炸范围
 			Rect rect = Rect(bpos.x - 125, bpos.y - 125, 250, 250);
 			//判断子弹和坦克中心点距离
@@ -501,6 +504,7 @@ void FireMaster::Gameover() {
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
@@ -509,6 +513,7 @@ void FireMaster::powerBullet_Btn1_click(Ref * sender)
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 1 && fix_Btn1->isEnabled()) {
         fix_Btn1->setEnabled(false);
         fix_Btn1->setVisible(false);
@@ -520,6 +525,7 @@ void FireMaster::fix_Btn1_click(Ref * sender)
 }
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 1 && defence_Btn1->isEnabled()) {
         defence1->setVisible(true);
         defence_Btn1->runAction(FadeOut::create(0.5));
@@ -529,6 +535,7 @@ void FireMaster::defence_Btn1_click(Ref * sender)
 }
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 1 && triAttack_Btn1->isEnabled()) {
         triAttack_Btn1->setEnabled(false);
         triAttack_Btn1->setVisible(false);
@@ -538,6 +545,7 @@ void FireMaster::triAttack_Btn1_click(Ref * sender)
 }
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 0 && powerBullet_Btn2->isEnabled()) {
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
@@ -547,6 +555,7 @@ void FireMaster::powerBullet_Btn2_click(Ref * sender)
 }
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 0 && fix_Btn2->isEnabled()) {
         fix_Btn2->setEnabled(false);
         fix_Btn2->setVisible(false);
@@ -558,6 +567,7 @@ void FireMaster::fix_Btn2_click(Ref * sender)
 }
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 0 && defence_Btn2->isEnabled()) {
         defence_Btn2->setEnabled(false);
         defence_Btn2->setVisible(false);
@@ -566,7 +576,8 @@ void FireMaster::defence_Btn2_click(Ref * sender)
     }
 }
 void FireMaster::triAttack_Btn2_click(Ref * sender)
-{
+{  
+	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
     if (Global::turn % 2 == 0) {
         triAttack_Btn2->setEnabled(false);
         triAttack_Btn2->setVisible(false);

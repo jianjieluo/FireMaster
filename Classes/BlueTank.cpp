@@ -3,8 +3,11 @@
 #include "Global.h"
 #include "Progress.h"
 #include "FireMaster.h"
+#include "SimpleAudioEngine.h"
+
 USING_NS_CC;
 
+using namespace CocosDenshion;
 using namespace cocos2d;
 
 BlueTank::BlueTank() {}
@@ -93,6 +96,9 @@ void BlueTank::addTouchListener()
             // 把蓄力条给去掉
             this->unschedule(schedule_selector(BlueTank::updatePowerbar));
             this->getParent()->removeChild(powerbar);
+
+			//发射音效
+			SimpleAudioEngine::getInstance()->playEffect("music/attack.wav");
 
             CCLOG("launch _power:%f", m_power);
             BlueTank::touchEvent(touch);
