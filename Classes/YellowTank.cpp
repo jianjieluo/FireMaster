@@ -39,8 +39,7 @@ void YellowTank::initOptions()
     this->setFlipX(true);
 
     this->setDefaultProperty();
-
-    // set 物理属性，链接刚体
+    isInTurn = false;
 }
 
 void YellowTank::addEvents() {
@@ -60,16 +59,17 @@ void YellowTank::addTouchListener()
 
         if(rect.containsPoint(p))
         {
-            if (Global::turn % 2 == 0) {
+            if (Global::turn % 2 == 0 && Global::bullets.empty() && !isInTurn) {
                 m_power = 0;
                 m_istouch = true;//按钮按下
+                isInTurn = true; // 这个为false也就是不在自己的turn的时候才可以进入，这个bool变量将作为public信号量给FireMaster去设置以完成同步
                 this->schedule(schedule_selector(YellowTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
-				//按下取消等待计时器
-				auto clockUI = this->getParent()->getChildByName("waitClock");
-				if (clockUI != NULL) {
-					clockUI->setVisible(false);
-				}
+                                                                                   //按下取消等待计时器
+                auto clockUI = this->getParent()->getChildByName("waitClock");
+                if (clockUI != NULL) {
+                    clockUI->setVisible(false);
+                }
 
                 // 按下的时候添加力度进度条到场景里面去
                 // 创建蓄力条

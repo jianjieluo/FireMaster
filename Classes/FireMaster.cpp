@@ -309,12 +309,19 @@ void FireMaster::nextTurn()
 {
 	++Global::turn;
 	int side = Global::turn % 2;
+
+    // 设置信号量保证只有进入到下一个回合的时候另一个tank的信号量才允许点击
+    if (side == 1) {
+        blueTank->isInTurn = false;
+    }
+    else {
+        yellowTank->isInTurn = false;
+    }
 	
 	//设置风向
 	refreshRandomWindPower();
 	CCString* ns = CCString::createWithFormat("windPower = %f", windPower);
 	CCLOG(ns->getCString());
-
 	
 	//设置风向UI
 	wind1->setProgress(0);
@@ -422,15 +429,9 @@ void FireMaster::updateCollision(float ft)
 
             auto seq = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation")),
                 CallFunc::create(
-                    [&]() {
-                explosion->removeFromParentAndCleanup(true);
-                // 在这里计算爆炸点和两个坦克之间的距离，然后计算伤害
-
-                // 爆炸之后才能进入下一个回合
-                ++Global::turn;
                     [explosion, this]() {
-                explosion->removeFromParentAndCleanup(true);
-				FireMaster::nextTurn();
+                        explosion->removeFromParentAndCleanup(true);
+				        FireMaster::nextTurn();
             }), nullptr);
 
             explosion->runAction(seq);

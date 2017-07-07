@@ -11,6 +11,7 @@ public:
     int hp;
     std::string curr_bullet_name;
     int bullet_count;
+    bool isInTurn;
 
 public:
     BlueTank();
