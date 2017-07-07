@@ -7,6 +7,7 @@
 #include "Global.h"
 #include "Debug.h"
 #include <string>
+#include <math.h>
 
 using namespace ui;
 using namespace CocosDenshion;
@@ -187,22 +188,21 @@ void FireMaster::addSprite() {
 	this->addChild(triAttack_Btn2, 1);
 
 	//add hp1
-	auto hp1 = Progress::create("progressBg.png","blood.png");
+	hp1 = Progress::create("progressBg.png","blood.png");
 	hp1->setPosition(Vec2(215, 569));
 	hp1->setScaleX(11.5);
 	hp1->setScaleY(1.5);
 	hp1->setMidpoint(Point(1, 0.5));
 	this->addChild(hp1, 3);
-	hp1->setProgress(50);
-
+	hp1->setProgress(100);
 
 	//add hp2
-	auto hp2 = Progress::create("progressBg.png", "blood.png");
+	hp2 = Progress::create("progressBg.png", "blood.png");
 	hp2->setPosition(Vec2(745, 569));
 	hp2->setScaleX(11.5);
 	hp2->setScaleY(1.5);
 	this->addChild(hp2, 3);
-	hp2->setProgress(40);
+	hp2->setProgress(100);
 
 	//add windpower1
 	auto wind1 = Progress::create("progressBg.png", "wind.png");
@@ -345,6 +345,31 @@ void FireMaster::updateCollision(float ft)
         bool isHitOpponent = (Global::turn % 2 == 1) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
 
         if (isCrashwithBg || isHitOpponent) {
+			//爆炸范围
+			Rect rect = Rect(bpos.x - 125, bpos.y - 125, 250, 250);
+			//判断子弹和坦克中心点距离
+			float distance;
+			//炸到了yellowtank
+			if (m_checkingRects[4].intersectsRect(rect)) {
+				distance =sqrt((bpos.x - yellowTank->getPosition().x)*(bpos.x - yellowTank->getPosition().x)
+					+(bpos.y - yellowTank->getPosition().y)*(bpos.y - yellowTank->getPosition().y));
+
+				float currentHp = hp2->getPercentage();
+				//0.6是暂定的，调整这个比例可以控制扣血的量
+				currentHp -= 0.6 * (31- distance/10 );
+				hp2->setProgress(currentHp);
+			}
+
+			//炸到了bluetank
+			if (m_checkingRects[5].intersectsRect(rect)) {
+				distance = sqrt((bpos.x - blueTank->getPosition().x)*(bpos.x - blueTank->getPosition().x)
+					+ (bpos.y - blueTank->getPosition().y)*(bpos.y - blueTank->getPosition().y));
+
+				float currentHp = hp1->getPercentage();
+				//0.6是暂定的，调整这个比例可以控制扣血的量
+				currentHp -= 0.6 * (31 - distance / 10);
+				hp1->setProgress(currentHp);
+			}
 
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
