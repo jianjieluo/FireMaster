@@ -43,8 +43,8 @@ bool introductionPage::init()
 	this->addChild(bgSprite, 0);
 
 	//add button
-	auto startBtn = Button::create("imges/startButton3.png", "imges/startButton2.png");
-	startBtn->setScale(0.5);
+	auto startBtn = Button::create("imges/startButton5.png", "imges/startButton4.png");
+	startBtn->setScale(1.5);
 	startBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 1 / 10));
 	startBtn->addClickEventListener(CC_CALLBACK_1(introductionPage::StartBtn_click, this));
 	this->addChild(startBtn, 1);
