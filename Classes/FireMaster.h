@@ -32,6 +32,8 @@ public:
 	CREATE_FUNC(FireMaster);
 
 private:
+	Sprite *defence1, *defence2;
+
 	Sprite* booms[3];
 	Progress *wind1, *wind2;
 

@@ -41,14 +41,16 @@ bool FireMaster::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
+	//add yellow tank
+	yellowTank = YellowTank::create();
+	this->addChild(yellowTank, 1);
+	//add blue tank
+	blueTank = BlueTank::create();
+	this->addChild(blueTank, 1);
+
+
 	addSprite();
     Global::bullets.clear();
-    //add yellow tank
-    yellowTank = YellowTank::create();
-    this->addChild(yellowTank, 1);
-    //add blue tank
-    blueTank = BlueTank::create();
-    this->addChild(blueTank, 1);
 
     m_checkingRects[4].setRect(yellowTank->getBoundingBox().origin.x, yellowTank->getBoundingBox().origin.y,
         yellowTank->getBoundingBox().size.width, yellowTank->getBoundingBox().size.height - 40);
@@ -140,7 +142,7 @@ void FireMaster::addSprite() {
 	//add powerBullet_Btn1
 	powerBullet_Btn1 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
 	powerBullet_Btn1->setPosition(Vec2(visibleSize.width / 12, visibleSize.height * 8.1 / 10 ));
-	powerBullet_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
+	powerBullet_Btn1->addClickEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn1_click, this));
 	this->addChild(powerBullet_Btn1, 1);
 
 
@@ -148,49 +150,49 @@ void FireMaster::addSprite() {
 	fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
 	fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
 	fix_Btn1->setScale(0.5);
-	fix_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
+	fix_Btn1->addClickEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
 	this->addChild(fix_Btn1, 1);
 
 	//add defence_Btn1
 	defence_Btn1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
 	defence_Btn1->setPosition(Vec2(visibleSize.width * 25 / 96 , visibleSize.height * 8.1 / 10));
 	defence_Btn1->setScale(0.5);
-	defence_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
+	defence_Btn1->addClickEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
 	this->addChild(defence_Btn1, 1);
 
 	//add triAttack_Btn1
 	triAttack_Btn1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
 	triAttack_Btn1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
 	triAttack_Btn1->setScale(0.5);
-	triAttack_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
+	triAttack_Btn1->addClickEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
 	this->addChild(triAttack_Btn1, 1);
 
 	//add powerBullet_Btn2
 	powerBullet_Btn2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
 	powerBullet_Btn2->setPosition(Vec2(visibleSize.width *11 / 12, visibleSize.height * 8.1 / 10));
 	powerBullet_Btn2->setFlipX(true);
-	powerBullet_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
+	powerBullet_Btn2->addClickEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
 	this->addChild(powerBullet_Btn2, 1);
 
 	//add fix_Btn2
 	fix_Btn2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
 	fix_Btn2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
 	fix_Btn2->setScale(0.5);
-	fix_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
+	fix_Btn2->addClickEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
 	this->addChild(fix_Btn2, 1);
 
 	//add defence_Btn2
 	defence_Btn2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
 	defence_Btn2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
 	defence_Btn2->setScale(0.5);
-	defence_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
+	defence_Btn2->addClickEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
 	this->addChild(defence_Btn2, 1);
 
 	//add triAttack_Btn2
 	triAttack_Btn2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
 	triAttack_Btn2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
 	triAttack_Btn2->setScale(0.5);
-	triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
+	triAttack_Btn2->addClickEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
 	this->addChild(triAttack_Btn2, 1);
 
 	//add hp1
@@ -230,55 +232,6 @@ void FireMaster::addSprite() {
 	this->addChild(wind2, 3);
 	wind2->setProgress(0);
 	
-    //add fix_Btn1
-    fix_Btn1 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
-    fix_Btn1->setPosition(Vec2(visibleSize.width * 17 / 96, visibleSize.height * 8.1 / 10));
-    fix_Btn1->setScale(0.5);
-    fix_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn1_click, this));
-    this->addChild(fix_Btn1, 1);
-
-    //add defence_Btn1
-    defence_Btn1 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
-    defence_Btn1->setPosition(Vec2(visibleSize.width * 25 / 96, visibleSize.height * 8.1 / 10));
-    defence_Btn1->setScale(0.5);
-    defence_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn1_click, this));
-    this->addChild(defence_Btn1, 1);
-
-    //add triAttack_Btn1
-    triAttack_Btn1 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
-    triAttack_Btn1->setPosition(Vec2(visibleSize.width * 33 / 96, visibleSize.height * 8.1 / 10));
-    triAttack_Btn1->setScale(0.5);
-    triAttack_Btn1->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn1_click, this));
-    this->addChild(triAttack_Btn1, 1);
-
-    //add powerBullet_Btn2
-    powerBullet_Btn2 = Button::create("imges/tank_bullet4.png", "imges/tank_bullet4.png");
-    powerBullet_Btn2->setPosition(Vec2(visibleSize.width * 11 / 12, visibleSize.height * 8.1 / 10));
-    powerBullet_Btn2->setFlipX(true);
-    powerBullet_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::powerBullet_Btn2_click, this));
-    this->addChild(powerBullet_Btn2, 1);
-
-    //add fix_Btn2
-    fix_Btn2 = Button::create("imges/tanks_crateRepair.png", "imges/tanks_crateRepair.png");
-    fix_Btn2->setPosition(Vec2(visibleSize.width * 79 / 96, visibleSize.height * 8.1 / 10));
-    fix_Btn2->setScale(0.5);
-    fix_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::fix_Btn2_click, this));
-    this->addChild(fix_Btn2, 1);
-
-    //add defence_Btn2
-    defence_Btn2 = Button::create("imges/tanks_crateArmor.png", "imges/tanks_crateArmor.png");
-    defence_Btn2->setPosition(Vec2(visibleSize.width * 71 / 96, visibleSize.height * 8.1 / 10));
-    defence_Btn2->setScale(0.5);
-    defence_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::defence_Btn2_click, this));
-    this->addChild(defence_Btn2, 1);
-
-    //add triAttack_Btn2
-    triAttack_Btn2 = Button::create("imges/tanks_crateAmmo.png", "imges/tanks_crateAmmo.png");
-    triAttack_Btn2->setPosition(Vec2(visibleSize.width * 63 / 96, visibleSize.height * 8.1 / 10));
-    triAttack_Btn2->setScale(0.5);
-    triAttack_Btn2->addTouchEventListener(CC_CALLBACK_1(FireMaster::triAttack_Btn2_click, this));
-    this->addChild(triAttack_Btn2, 1);
-	
 	//添加wait clock
 	waitClock = ProgressTimer::create(Sprite::create("imges/waitClock.png"));
 	waitClock->setType(ProgressTimer::Type::RADIAL);
@@ -286,6 +239,22 @@ void FireMaster::addSprite() {
 	waitClock->setScale(1.2);
 	waitClock->setVisible(false);
 	this->addChild(waitClock, 3, "waitClock");
+
+	//添加defence1防护罩
+	defence1 = Sprite::createWithSpriteFrameName("defence.png");
+	defence1->setAnchorPoint(Point(0.5, 0.5));
+	defence1->setPosition(blueTank->getPosition().x, blueTank->getPosition().y + 10);
+	defence1->setScale(1.5);
+	defence1->setVisible(false);
+	this->addChild(defence1, 2);
+
+	//添加defence2防护罩
+	defence2 = Sprite::createWithSpriteFrameName("defence.png");
+	defence2->setAnchorPoint(Point(0.5, 0.5));
+	defence2->setPosition(yellowTank->getPosition().x, yellowTank->getPosition().y + 10);
+	defence2->setScale(1.5);
+	defence2->setVisible(false);
+	this->addChild(defence2, 2);
 }
 
 void FireMaster::refreshRandomWindPower() {
@@ -529,6 +498,7 @@ void FireMaster::fix_Btn1_click(Ref * sender)
 }
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
+	defence1->setVisible(true);
     defence_Btn1->runAction(FadeOut::create(0.5));
 }
 void FireMaster::triAttack_Btn1_click(Ref * sender)
@@ -545,6 +515,7 @@ void FireMaster::fix_Btn2_click(Ref * sender)
 }
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
+	defence2->setVisible(true);
     defence_Btn2->runAction(FadeOut::create(0.5));
 }
 void FireMaster::triAttack_Btn2_click(Ref * sender)
