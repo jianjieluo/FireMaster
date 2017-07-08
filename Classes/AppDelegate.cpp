@@ -29,7 +29,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect("BangBangGame", Rect(0, 0, 960, 640));
+        glview = GLViewImpl::createWithRect("FireMaster", Rect(0, 0, 960, 640));
         director->setOpenGLView(glview);
     }
 

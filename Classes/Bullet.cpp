@@ -12,14 +12,25 @@ Bullet* Bullet::create(const std::string &filename, int t_hurt)
 {
     Bullet* pSprite = new Bullet();
 
-    if (pSprite->initWithSpriteFrameName(filename))
-    {
-        pSprite->autorelease();
+    if (filename == "tank_bullet4.png") {
+        // 因为一开始没有想到，没有加进plist里面，后面的权宜之计
+        if (pSprite->initWithFile("imges/tank_bullet4.png")) {
+            pSprite->autorelease();
+            pSprite->initOptions();
+            pSprite->setHurtness(t_hurt);
+            return pSprite;
+        }
+    }
+    else {
+        if (pSprite->initWithSpriteFrameName(filename))
+        {
+            pSprite->autorelease();
 
-        pSprite->initOptions();
-        pSprite->setHurtness(t_hurt);
+            pSprite->initOptions();
+            pSprite->setHurtness(t_hurt);
 
-        return pSprite;
+            return pSprite;
+        }
     }
 
     CC_SAFE_DELETE(pSprite);
