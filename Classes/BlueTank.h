@@ -42,7 +42,7 @@ public:
 private:
     // const 表示该精灵的固有属性
     // 按下的时候力度增长的速率
-    const std::string default_bullet_name = "bullet1.png";
+    const std::string default_bullet_name = "bullet2.png";
     const float m_pressv = 0.5;
     const int m_basic_hurt = 10;
     // 蓄的力量，用来和m_basic_hurt一起作为初速度的参考值，用来更新力度条

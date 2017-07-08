@@ -21,7 +21,7 @@ void FireMaster::setPhysicsWorld(PhysicsWorld* world) { m_world = world; }
 Scene* FireMaster::createScene() {
     srand((unsigned)time(NULL));
     auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
     scene->getPhysicsWorld()->setAutoStep(true);
     scene->getPhysicsWorld()->setGravity(Vec2(0, -300.0f));
     auto layer = FireMaster::create();
@@ -508,7 +508,7 @@ void FireMaster::powerBullet_Btn1_click(Ref * sender)
     if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
-        blueTank->setCurrBulletName("bullet2.png");
+        blueTank->setCurrBulletName("tank_bullet4.png");
     }
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
@@ -550,7 +550,7 @@ void FireMaster::powerBullet_Btn2_click(Ref * sender)
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
         powerBullet_Btn2->runAction(FadeOut::create(0.5));
-        yellowTank->setCurrBulletName("bullet2.png");
+        yellowTank->setCurrBulletName("tank_bullet4.png");
     }
 }
 void FireMaster::fix_Btn2_click(Ref * sender)
