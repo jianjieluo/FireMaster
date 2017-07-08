@@ -3,9 +3,12 @@
 #include "Progress.h"
 #include "AppDelegate.h"
 #include "FireMaster.h"
+#include "SimpleAudioEngine.h"
+
 
 USING_NS_CC;
 
+using namespace CocosDenshion;
 using namespace cocos2d;    
 
 YellowTank::YellowTank() {}
@@ -54,7 +57,7 @@ void YellowTank::addTouchListener()
     // 开始按下的回调函数
     listener->onTouchBegan = [&](cocos2d::Touch* touch, cocos2d::Event* event)
     {   
-
+		
 
         cocos2d::Vec2 p = touch->getLocation();
         cocos2d::Rect rect = this->getBoundingBox();
@@ -97,6 +100,9 @@ void YellowTank::addTouchListener()
         this->unschedule(schedule_selector(YellowTank::updatePowerbar));
         this->getParent()->removeChild(powerbar);
 
+		//发射音效
+		SimpleAudioEngine::getInstance()->playEffect("music/attack.wav");
+
         CCLOG("launch _power:%f", m_power);
         YellowTank::touchEvent(touch);
         m_istouch = false;
@@ -129,6 +135,8 @@ void YellowTank::runAttack()
         boom->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
 
         this->getParent()->addChild(boom, 2, "boom"); // 设置一个名字，便于追踪
+
+		
 
         // 去掉爆炸后的效果
         auto s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")),
@@ -165,6 +173,7 @@ void YellowTank::runAttack()
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAttackAnimation"));
 
 	auto afterAttackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAfterAttackAnimation"));
+
 
     if (bullet_count == 1) {
         auto s = Sequence::create(attackAnimate, fireAnimate, launch, DelayTime::create(0.5f),
