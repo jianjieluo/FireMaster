@@ -382,9 +382,15 @@ void FireMaster::updateCollision(float ft)
 
 				float currentHp = hp2->getPercentage();
 				//0.6是暂定的，调整这个比例可以控制扣血的量
-				currentHp -= 0.6 * (31- distance/10 );
 
-				currentHp = 0;
+                if (!defence2->isVisible()) {
+                    currentHp -= 0.06 * (31 - distance / 10) * b->getHurtness();
+                }
+                else {
+                    defence2->setVisible(false);
+                }
+           
+				//currentHp = 0;
 
 				hp2->setProgress(currentHp);
 
@@ -402,9 +408,14 @@ void FireMaster::updateCollision(float ft)
 
 				float currentHp = hp1->getPercentage();
 				//0.6是暂定的，调整这个比例可以控制扣血的量
-				currentHp -= 0.6 * (31 - distance / 10);
+                if (!defence1->isVisible()) {
+                    currentHp -= 0.06 * (31 - distance / 10) * b->getHurtness();
+                }
+                else {
+                    defence1->setVisible(false);
+                }
 
-				currentHp = 0;
+				//currentHp = 0;
 
 				hp1->setProgress(currentHp <= 0 ? 0 : currentHp);
 
@@ -490,37 +501,78 @@ void FireMaster::Gameover() {
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
-    powerBullet_Btn1->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled()) {
+        powerBullet_Btn1->setEnabled(false);
+        powerBullet_Btn1->setVisible(false);
+        blueTank->setCurrBulletName("bullet2.png");
+    }
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
-    fix_Btn1->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 1 && fix_Btn1->isEnabled()) {
+        fix_Btn1->setEnabled(false);
+        fix_Btn1->setVisible(false);
+        float currentHp = hp1->getPercentage();
+        currentHp += 20;
+        hp1->setProgress(currentHp >= 100 ? 100 : currentHp);
+
+    }
 }
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
-	defence1->setVisible(true);
-    defence_Btn1->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 1 && defence_Btn1->isEnabled()) {
+        defence1->setVisible(true);
+        defence_Btn1->runAction(FadeOut::create(0.5));
+        defence_Btn1->setEnabled(false);
+        defence_Btn1->setVisible(false);
+    }
 }
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
-    triAttack_Btn1->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 1 && triAttack_Btn1->isEnabled()) {
+        triAttack_Btn1->setEnabled(false);
+        triAttack_Btn1->setVisible(false);
+        triAttack_Btn1->runAction(FadeOut::create(0.5));
+        blueTank->setBulletCount(3);
+    }
 }
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
-    powerBullet_Btn2->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 0 && powerBullet_Btn2->isEnabled()) {
+        powerBullet_Btn2->setEnabled(false);
+        powerBullet_Btn2->setVisible(false);
+        powerBullet_Btn2->runAction(FadeOut::create(0.5));
+        yellowTank->setCurrBulletName("bullet2.png");
+    }
 }
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
-    fix_Btn2->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 0 && fix_Btn2->isEnabled()) {
+        fix_Btn2->setEnabled(false);
+        fix_Btn2->setVisible(false);
+        fix_Btn2->runAction(FadeOut::create(0.5));
+        float currentHp = hp2->getPercentage();
+        currentHp += 20;
+        hp2->setProgress(currentHp >= 100 ? 100 : currentHp);
+    }
 }
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
-	defence2->setVisible(true);
-    defence_Btn2->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 0 && defence_Btn2->isEnabled()) {
+        defence_Btn2->setEnabled(false);
+        defence_Btn2->setVisible(false);
+        defence2->setVisible(true);
+        defence_Btn2->runAction(FadeOut::create(0.5));
+    }
 }
 void FireMaster::triAttack_Btn2_click(Ref * sender)
 {
-    triAttack_Btn2->runAction(FadeOut::create(0.5));
+    if (Global::turn % 2 == 0) {
+        triAttack_Btn2->setEnabled(false);
+        triAttack_Btn2->setVisible(false);
+        triAttack_Btn2->runAction(FadeOut::create(0.5));
+        yellowTank->setBulletCount(3);
+    }
 }
 
 //被调度的timer函数

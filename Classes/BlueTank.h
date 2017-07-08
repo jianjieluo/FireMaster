@@ -8,9 +8,6 @@ class BlueTank : public cocos2d::Sprite
 {
 public:
     //可以和上一层场景交互的变量
-    int hp;
-    std::string curr_bullet_name;
-    int bullet_count;
     bool isInTurn;
 
 public:
@@ -35,6 +32,12 @@ public:
     //个体行为
     void runAttack();
     void setDefaultProperty();
+    void setCurrBulletName(const std::string & t_name) {
+        curr_bullet_name = t_name;
+    }
+    void setBulletCount(const int n) {
+        bullet_count = n;
+    }
 
 private:
     // const 表示该精灵的固有属性
@@ -49,4 +52,7 @@ private:
     bool m_istouch;
     // 蓄力UI
 	Progress* powerbar;
+
+    std::string curr_bullet_name;
+    int bullet_count;
 };

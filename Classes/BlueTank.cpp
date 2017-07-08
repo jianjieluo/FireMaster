@@ -36,7 +36,8 @@ void BlueTank::initOptions()
     this->setPosition(100, 100);
     this->setScale(tankScaleSize);
 
-    // set 物理属性，链接刚体
+    this->setDefaultProperty();
+    isInTurn = false;
 }
 
 void BlueTank::addEvents() {
@@ -128,41 +129,53 @@ void BlueTank::runAttack()
 		this->getParent()->addChild(boom, 2, "boom"); // 设置一个名字，便于追踪
 
 													  // 去掉爆炸后的效果
-		auto s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")),
-			CallFunc::create(
-				[&]() {
-			this->getParent()->getChildByName("boom")->removeAllChildrenWithCleanup(true);
-			this->getParent()->getChildByName("boom")->removeFromParentAndCleanup(true);
-			//this->getParent()->getChildByName("boom")->removeFromParent();
-		}
-		), nullptr);
-		boom->runAction(s);
+        auto s = Sequence::create(Animate::create(AnimationCache::getInstance()->getAnimation("fireAnimation")),
+            CallFunc::create(
+                [&]() {
+            this->getParent()->getChildByName("boom")->removeAllChildrenWithCleanup(true);
+            this->getParent()->getChildByName("boom")->removeFromParentAndCleanup(true);
+            //this->getParent()->getChildByName("boom")->removeFromParent();
+        }
+        ), nullptr);
+        boom->runAction(s);
     });
 
     auto launch = CallFunc::create([&]() {
         // 在这里添加子弹生成,同时设置好物理的刚体属性，旋转发射角度，水平和垂直初速度等等，
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
-		while (bullet_count--) {
-			auto b = Bullet::create(this->curr_bullet_name, m_basic_hurt);
-			// 子弹相关属性设置，还需要调整
-			b->setPosition(this->getPosition().x + 20, this->getPosition().y + 40);
-			b->setRotation(-50.0f);
-			b->getPhysicsBody()->setVelocity(Vec2(m_power * 25, m_power * 20));
-			b->setHurtness(m_power * 2);
+        auto curr_bullet_hurt = m_basic_hurt;
+        if (this->curr_bullet_name == "tank_bullet4.png") {
+            curr_bullet_hurt += 15;
+        }
+        auto b = Bullet::create(this->curr_bullet_name, curr_bullet_hurt);
+        // 子弹相关属性设置，还需要调整
+        b->setPosition(this->getPosition().x + 20, this->getPosition().y + 40);
+        b->setRotation(-50.0f);
+        b->getPhysicsBody()->setVelocity(Vec2(m_power * 25, m_power * 20));
+        b->setHurtness(m_power * 2);
 
-            Global::bullets.push_back(b);
-			this->getParent()->addChild(b, 1);
-		}
+        Global::bullets.push_back(b);
+        this->getParent()->addChild(b, 1);
     });
 
+    auto setDefaultLamda = CallFunc::create([&]() {
+        this->setDefaultProperty();
+    });
     auto attackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
 	auto afterAttackAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAfterAttackAnimation"));
 
-	auto s = Sequence::create(attackAnimate, fireAnimate, launch, DelayTime::create(0.5f), afterAttackAnimate, nullptr);
-    this->runAction(s);
+    if (bullet_count == 1) {
+        auto s = Sequence::create(attackAnimate, fireAnimate, launch, DelayTime::create(0.5f),
+            afterAttackAnimate, setDefaultLamda, nullptr);
+        this->runAction(s);
+    }
+    else if (bullet_count == 3) {
+        auto s = Sequence::create(attackAnimate, fireAnimate, launch,
+            DelayTime::create(0.5f), fireAnimate, launch, DelayTime::create(0.5f),
+            fireAnimate, launch, DelayTime::create(0.5f), afterAttackAnimate, setDefaultLamda, nullptr);
+        this->runAction(s);
+    }
 
-	// 设置好下一次的属性，这里面的属性可以在场景通过点击按钮来改变
-	this->setDefaultProperty();
 }
 
 void BlueTank::setDefaultProperty()
