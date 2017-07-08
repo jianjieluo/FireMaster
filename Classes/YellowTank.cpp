@@ -55,6 +55,8 @@ void YellowTank::addTouchListener()
     // 开始按下的回调函数
     listener->onTouchBegan = [&](cocos2d::Touch* touch, cocos2d::Event* event)
     {   
+
+
         cocos2d::Vec2 p = touch->getLocation();
         cocos2d::Rect rect = this->getBoundingBox();
 

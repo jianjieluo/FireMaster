@@ -4,6 +4,7 @@
 #include "YellowTank.h"
 #include "SimpleAudioEngine.h"
 #include "AppDelegate.h"
+#include "replayView.h"
 #include "Global.h"
 #include "Debug.h"
 #include <string>
@@ -307,6 +308,8 @@ void FireMaster::updateBulletVelocity(float ft) {
 
 void FireMaster::nextTurn()
 {
+	if (Global::isGameover) return;
+
 	++Global::turn;
 	int side = Global::turn % 2;
 	
@@ -337,6 +340,8 @@ void FireMaster::nextTurn()
 
 void FireMaster::updateTurnUI(float ft)
 {
+	if (Global::isGameover) return;
+
     auto curr_turn = std::to_string(Global::turn);
     auto side = ((Global::turn % 2) == 0) ? "right" : "left";
     auto newstr = "Round:" + curr_turn + " " + side;
@@ -345,6 +350,9 @@ void FireMaster::updateTurnUI(float ft)
 }
 
 void FireMaster::updateBulletRotation(float t) {
+
+	if (Global::isGameover) return;
+
 	for (auto bullet : Global::bullets) {
 		if (bullet != NULL) {
 			//向量标准化
@@ -360,6 +368,8 @@ void FireMaster::updateBulletRotation(float t) {
 
 void FireMaster::updateCollision(float ft)
 {
+	if (Global::isGameover) return;
+
     if (!Global::bullets.empty()) { 
         auto b = Global::bullets.front();
         auto bpos = b->getPosition();
@@ -397,7 +407,16 @@ void FireMaster::updateCollision(float ft)
 				float currentHp = hp2->getPercentage();
 				//0.6是暂定的，调整这个比例可以控制扣血的量
 				currentHp -= 0.6 * (31- distance/10 );
+
+				currentHp = 0;
+
 				hp2->setProgress(currentHp);
+
+				if (currentHp <= 0) {
+					Global::winSide = 0;
+					Global::isGameover = true;
+					Gameover();
+				}
 			}
 
 			//炸到了bluetank
@@ -408,7 +427,16 @@ void FireMaster::updateCollision(float ft)
 				float currentHp = hp1->getPercentage();
 				//0.6是暂定的，调整这个比例可以控制扣血的量
 				currentHp -= 0.6 * (31 - distance / 10);
-				hp1->setProgress(currentHp);
+
+				currentHp = 0;
+
+				hp1->setProgress(currentHp <= 0 ? 0 : currentHp);
+
+				if (currentHp <= 0) {
+					Global::winSide = 1;
+					Global::isGameover = true;
+					Gameover();
+				}
 			}
 
             b->removeFromParentAndCleanup(true);
@@ -431,6 +459,57 @@ void FireMaster::updateCollision(float ft)
         }
     }
 }
+
+//游戏结束
+void FireMaster::Gameover() {
+
+	auto pos = Global::winSide == 1 ? blueTank->getPosition() : yellowTank->getPosition();
+
+	for (int i = 0; i < 3; ++i) {
+		booms[i] = Sprite::createWithSpriteFrameName("explosion1.png");
+		booms[i]->setAnchorPoint(Point(0.5, 0.5));
+		this->addChild(booms[i], 4);
+		booms[i]->setVisible(false);
+	}
+	booms[0]->setPosition(pos.x - 20, pos.y + 20);
+	booms[1]->setPosition(pos.x + 10, pos.y + 5);
+	booms[2]->setPosition(pos.x - 20, pos.y + 15);
+
+	auto exAnimate = Animate::create(AnimationCache::getInstance()->getAnimation("explosionAnimation"));
+
+	auto remove0 = CallFunc::create([&]() {
+		this->removeChild(booms[0], true);
+	});
+	auto remove1 = CallFunc::create([&]() {
+		this->removeChild(booms[1], true);
+	});
+	auto remove2 = CallFunc::create([&]() {
+		this->removeChild(booms[2], true);
+	});
+
+	Sequence* s[3];
+	s[0] = Sequence::create(CallFunc::create([&]() {
+		booms[0]->setVisible(true);
+	}), exAnimate, remove0, nullptr);
+	s[1] = Sequence::create(DelayTime::create(0.1f), CallFunc::create([&]() {
+		booms[1]->setVisible(true);
+	}), exAnimate, remove1, nullptr);
+	s[2] = Sequence::create(DelayTime::create(0.2f), CallFunc::create([&]() {
+		booms[2]->setVisible(true);
+	}), exAnimate, remove2, nullptr);
+
+	for (int i = 0; i < 3; ++i)
+		booms[i]->runAction(s[i]);
+
+	cocos2d::Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
+
+	auto str = Sequence::create(DelayTime::create(1.0f), CallFunc::create([&]() {
+		Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, replayView::createScene()));
+	}), nullptr);
+
+	this->runAction(str);
+}
+
 
 //UI栏技能点击函数
 void FireMaster::powerBullet_Btn1_click(Ref * sender)

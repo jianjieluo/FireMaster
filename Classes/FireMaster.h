@@ -32,7 +32,7 @@ public:
 	CREATE_FUNC(FireMaster);
 
 private:
-
+	Sprite* booms[3];
 	Progress *wind1, *wind2;
 
     Size visibleSize;
@@ -48,6 +48,8 @@ private:
     bool istouch;
 
 	void addSprite();
+
+	void Gameover();
 
 	void powerBullet_Btn1_click(Ref * sender);
 	void fix_Btn1_click(Ref * sender);

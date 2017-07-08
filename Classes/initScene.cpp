@@ -55,7 +55,7 @@ bool initScene::init()
 	auto introductionBtn = Button::create("imges/howToPlayBtn2.png", "imges/howToPlayBtn.png");
 	introductionBtn->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2 - 80));
 	introductionBtn->addClickEventListener(CC_CALLBACK_1(initScene::introductionBtn_click, this));
-	introductionBtn->setScale(1.2);
+	introductionBtn->setScale(1.3, 1.2);
 	this->addChild(introductionBtn, 1);
 	
 	//play bgm
