@@ -11,10 +11,10 @@ A funny cocos2dx game ! Learn From the idea of a game called Fleabag Vs. Mutt.
 玩家通过在自己回合中通过改变按压坦克时间长短来控制坦克发射导弹的力度，导弹在飞行过程中会受到风力影响，导弹击中敌方坦克将会爆炸并对敌方坦克造成伤害，伤害量的大小与爆炸中心到坦克距离有关，最大伤害量为初始伤害量的2倍，期间玩家可通过使用技能调整战略，每个技能可使用一次，一个回合可以使用多个技能，血量最先到达0的玩家将会被判为战败。
 ### 2. 技能说明
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/bullet.png)
-普通炮弹 普通伤害10%-20% 可用次数无限
+普通炮弹 普通伤害3.5%~15% 可用次数无限
 
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/powerBullet.png)
-强爆导弹 普通伤害20%-40%  可用一次
+强爆导弹 普通伤害7%-30%  可用一次
 
 ![](https://raw.githubusercontent.com/mgsweet/FireMaster/master/project_images/defenceUI.png)
 矩阵防御 可防御一次敌方攻击
