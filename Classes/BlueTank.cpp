@@ -157,7 +157,6 @@ void BlueTank::runAttack()
         b->setPosition(this->getPosition().x + 20, this->getPosition().y + 40);
         b->setRotation(-50.0f);
         b->getPhysicsBody()->setVelocity(Vec2(m_power * 25, m_power * 20));
-        b->setHurtness(m_power * 2);
 
         Global::bullets.push_back(b);
         this->getParent()->addChild(b, 1);

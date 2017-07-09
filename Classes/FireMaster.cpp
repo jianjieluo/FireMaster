@@ -385,25 +385,29 @@ void FireMaster::updateCollision(float ft)
 
 			//炸到了yellowtank
 			if (m_checkingRects[4].intersectsRect(rect)) {
-				distance =sqrt((bpos.x - yellowTank->getPosition().x)*(bpos.x - yellowTank->getPosition().x)
-					+(bpos.y - yellowTank->getPosition().y)*(bpos.y - yellowTank->getPosition().y));
+				distance =sqrt(
+					pow(bpos.x - yellowTank->getPosition().x, 2)
+					+ pow(bpos.y - yellowTank->getPosition().y, 2)
+					);
 
-				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, blueTank->getPosition().x, bpos.y, blueTank->getPosition().y);
+				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, yellowTank->getPosition().x, bpos.y, yellowTank->getPosition().y);
 				CCLOG(ns->getCString());
 
 				float currentHp = hp2->getPercentage();
 
-                if (!defence2->isVisible()) {
-					auto subHp = (31 - distance / 10) / 23 * b->getHurtness();
+				if (distance <= 210) {
+					if (!defence2->isVisible()) {
+						float subHp = ((260 - distance) / 210) * b->getHurtness();
 
-					ns = CCString::createWithFormat("distance = %f, hurt = %f", distance, subHp);
-					CCLOG(ns->getCString());
+						ns = CCString::createWithFormat("distance = %f, hurt = %f", distance, subHp);
+						CCLOG(ns->getCString());
 
-                    currentHp -= subHp;
-                }
-                else {
-                    defence2->setVisible(false);
-                }
+						currentHp -= subHp;
+					}
+					else {
+						defence2->setVisible(false);
+					}
+			   }
            
 				//测试gameover
 				//currentHp = 0;
@@ -420,8 +424,10 @@ void FireMaster::updateCollision(float ft)
 			//炸到了bluetank
 			if (m_checkingRects[5].intersectsRect(rect)) {
 
-				distance = sqrt((bpos.x - blueTank->getPosition().x)*(bpos.x - blueTank->getPosition().x)
-					+ (bpos.y - blueTank->getPosition().y)*(bpos.y - blueTank->getPosition().y));
+				distance = sqrt(
+					pow(bpos.x - blueTank->getPosition().x, 2)
+					+ pow(bpos.y - blueTank->getPosition().y, 2)
+				);
 
 				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, blueTank->getPosition().x, bpos.y, blueTank->getPosition().y);
 				CCLOG(ns->getCString());
@@ -429,17 +435,19 @@ void FireMaster::updateCollision(float ft)
 
 				float currentHp = hp1->getPercentage();
 
-                if (!defence1->isVisible()) {
-					auto subHp = (31 - distance / 10) / 23 * b->getHurtness();
+				if (distance <= 210) {
+					if (!defence1->isVisible()) {
+						float subHp = ((260 - distance) / 210) * b->getHurtness();
 
-					ns = CCString::createWithFormat("distance = %f, hurt = %f",distance, subHp);
-					CCLOG(ns->getCString());
+						ns = CCString::createWithFormat("distance = %f, hurt = %f", distance, subHp);
+						CCLOG(ns->getCString());
 
-					currentHp -= subHp;
-                }
-                else {
-                    defence1->setVisible(false);
-                }
+						currentHp -= subHp;
+					}
+					else {
+						defence1->setVisible(false);
+					}
+				}
 
 				//测试gameover
 				//currentHp = 0;
