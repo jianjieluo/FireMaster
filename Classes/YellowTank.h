@@ -1,6 +1,7 @@
 #pragma once
 #include "Progress.h"
 #include "cocos2d.h"
+#include "Global.h"
 #include "Bullet.h"
 #include <string>
 
@@ -43,8 +44,9 @@ private:
     // const 表示该精灵的固有属性
     // 按下的时候力度增长的速率
     const std::string default_bullet_name = "bullet1.png";
-    const float m_pressv = 0.5;
-    const int m_basic_hurt = 10;
+	const float m_pressv = Global::pressv;
+	const int m_basic_hurt = Global::smallBullet;
+
     // 蓄的力量，用来和m_basic_hurt一起作为初速度的参考值，用来更新力度条
     float m_power;
 

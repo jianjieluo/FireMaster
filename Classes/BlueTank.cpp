@@ -1,6 +1,5 @@
 ﻿#include "BlueTank.h"
 #include "Bullet.h"
-#include "Global.h"
 #include "Progress.h"
 #include "FireMaster.h"
 #include "SimpleAudioEngine.h"
@@ -151,7 +150,7 @@ void BlueTank::runAttack()
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
         auto curr_bullet_hurt = m_basic_hurt;
         if (this->curr_bullet_name == "tank_bullet4.png") {
-            curr_bullet_hurt += 15;
+            curr_bullet_hurt = Global::bigBullet;
         }
         auto b = Bullet::create(this->curr_bullet_name, curr_bullet_hurt);
         // 子弹相关属性设置，还需要调整

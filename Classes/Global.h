@@ -14,6 +14,14 @@ public:
     static std::list<Bullet*> bullets;
 	static bool winSide; // 0 蓝车胜， 1 黄车胜
 	static bool isGameover;
+
+	//全局设置游戏参数
+	static int smallBullet;
+	static int bigBullet;
+	// 按下的时候力度增长的速率
+	static float pressv;
+	static int windPower;
+
 };
 
 #endif

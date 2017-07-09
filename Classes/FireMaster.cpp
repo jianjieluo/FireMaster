@@ -130,12 +130,13 @@ void FireMaster::addSprite() {
 	topUI->setScale(1.4, 1.3);
 	this->addChild(topUI, 4);
 
+#ifdef DEBUG
     turnUI = Label::createWithTTF("Round:0 right", "fonts/arial.ttf", 36);
     turnUI->setAnchorPoint(Point(0.5, 0.5));
     turnUI->setPosition(visibleSize.width / 2, visibleSize.height - 180);
     //turnUI->setScale(1.4, 1.3);
     this->addChild(turnUI, 1);
-#ifdef DEBUG
+
     this->schedule(schedule_selector(FireMaster::updateTurnUI), 0.1);
 #endif
 
@@ -270,11 +271,12 @@ void FireMaster::updateBulletVelocity(float ft) {
 			auto vX = bullet->getPhysicsBody()->getVelocity().x;
 			auto vY = bullet->getPhysicsBody()->getVelocity().y;
 			//具体加速度参数到时候再改
-			bullet->getPhysicsBody()->setVelocity(Vec2(vX + F * 5, vY));
+			bullet->getPhysicsBody()->setVelocity(Vec2(vX + F * Global::windPower, vY));
 		}
 	}
 }
 
+//进入下一回合
 void FireMaster::nextTurn()
 {
 	if (Global::isGameover) return;
@@ -314,10 +316,10 @@ void FireMaster::nextTurn()
 	waitClock->setVisible(true);
 }
 
+//debug模式下才会开启
 void FireMaster::updateTurnUI(float ft)
 {
 	if (Global::isGameover) return;
-
     auto curr_turn = std::to_string(Global::turn);
     auto side = ((Global::turn % 2) == 0) ? "right" : "left";
     auto newstr = "Round:" + curr_turn + " " + side;
@@ -358,11 +360,13 @@ void FireMaster::updateCollision(float ft)
         this->addChild(rectNode, 2);
 #endif
 
-
-        if (bpos.x < 0 || bpos.y < 0 || bpos.x > visibleSize.width) {
+		//出界判断, 运行在界外因为风力吹回来
+        if (bpos.x < -100 || bpos.y < 0 || bpos.x > visibleSize.width + 100) {
             b->removeFromParentAndCleanup(true);
             Global::bullets.pop_front();
-			nextTurn();
+			if (Global::bullets.empty()) {
+				nextTurn();
+			}
             return;
         }
 
@@ -378,21 +382,30 @@ void FireMaster::updateCollision(float ft)
 			Rect rect = Rect(bpos.x - 125, bpos.y - 125, 250, 250);
 			//判断子弹和坦克中心点距离
 			float distance;
+
 			//炸到了yellowtank
 			if (m_checkingRects[4].intersectsRect(rect)) {
 				distance =sqrt((bpos.x - yellowTank->getPosition().x)*(bpos.x - yellowTank->getPosition().x)
 					+(bpos.y - yellowTank->getPosition().y)*(bpos.y - yellowTank->getPosition().y));
 
+				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, blueTank->getPosition().x, bpos.y, blueTank->getPosition().y);
+				CCLOG(ns->getCString());
+
 				float currentHp = hp2->getPercentage();
-				//0.6是暂定的，调整这个比例可以控制扣血的量
 
                 if (!defence2->isVisible()) {
-                    currentHp -= 0.06 * (31 - distance / 10) * b->getHurtness();
+					auto subHp = (31 - distance / 10) / 23 * b->getHurtness();
+
+					ns = CCString::createWithFormat("distance = %f, hurt = %f", distance, subHp);
+					CCLOG(ns->getCString());
+
+                    currentHp -= subHp;
                 }
                 else {
                     defence2->setVisible(false);
                 }
            
+				//测试gameover
 				//currentHp = 0;
 
 				hp2->setProgress(currentHp);
@@ -406,18 +419,29 @@ void FireMaster::updateCollision(float ft)
 
 			//炸到了bluetank
 			if (m_checkingRects[5].intersectsRect(rect)) {
+
 				distance = sqrt((bpos.x - blueTank->getPosition().x)*(bpos.x - blueTank->getPosition().x)
 					+ (bpos.y - blueTank->getPosition().y)*(bpos.y - blueTank->getPosition().y));
 
+				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, blueTank->getPosition().x, bpos.y, blueTank->getPosition().y);
+				CCLOG(ns->getCString());
+				
+
 				float currentHp = hp1->getPercentage();
-				//0.6是暂定的，调整这个比例可以控制扣血的量
+
                 if (!defence1->isVisible()) {
-                    currentHp -= 0.06 * (31 - distance / 10) * b->getHurtness();
+					auto subHp = (31 - distance / 10) / 23 * b->getHurtness();
+
+					ns = CCString::createWithFormat("distance = %f, hurt = %f",distance, subHp);
+					CCLOG(ns->getCString());
+
+					currentHp -= subHp;
                 }
                 else {
                     defence1->setVisible(false);
                 }
 
+				//测试gameover
 				//currentHp = 0;
 
 				hp1->setProgress(currentHp <= 0 ? 0 : currentHp);
@@ -442,7 +466,9 @@ void FireMaster::updateCollision(float ft)
                 CallFunc::create(
                     [explosion, this]() {
                         explosion->removeFromParentAndCleanup(true);
-				        FireMaster::nextTurn();
+						if (Global::bullets.empty()) {
+							nextTurn();
+						}
             }), nullptr);
 
             explosion->runAction(seq);
@@ -480,12 +506,18 @@ void FireMaster::Gameover() {
 	Sequence* s[3];
 	s[0] = Sequence::create(CallFunc::create([&]() {
 		booms[0]->setVisible(true);
+		//爆炸音效
+		SimpleAudioEngine::getInstance()->playEffect("music/explosion.wav");
 	}), exAnimate, remove0, nullptr);
 	s[1] = Sequence::create(DelayTime::create(0.1f), CallFunc::create([&]() {
 		booms[1]->setVisible(true);
+		//爆炸音效
+		SimpleAudioEngine::getInstance()->playEffect("music/explosion.wav");
 	}), exAnimate, remove1, nullptr);
 	s[2] = Sequence::create(DelayTime::create(0.2f), CallFunc::create([&]() {
 		booms[2]->setVisible(true);
+		//爆炸音效
+		SimpleAudioEngine::getInstance()->playEffect("music/explosion.wav");
 	}), exAnimate, remove2, nullptr);
 
 	for (int i = 0; i < 3; ++i)
@@ -493,8 +525,8 @@ void FireMaster::Gameover() {
 
 	cocos2d::Director::getInstance()->getEventDispatcher()->removeAllEventListeners();
 
-	auto str = Sequence::create(DelayTime::create(1.0f), CallFunc::create([&]() {
-		Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, replayView::createScene()));
+	auto str = Sequence::create(DelayTime::create(0.6f), CallFunc::create([&]() {
+		Director::getInstance()->replaceScene(TransitionCrossFade::create(0.6f, replayView::createScene()));
 	}), nullptr);
 
 	this->runAction(str);
@@ -505,7 +537,7 @@ void FireMaster::Gameover() {
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled()) {
+    if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
         blueTank->setCurrBulletName("tank_bullet4.png");
@@ -514,7 +546,7 @@ void FireMaster::powerBullet_Btn1_click(Ref * sender)
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && fix_Btn1->isEnabled()) {
+    if (Global::turn % 2 == 1 && fix_Btn1->isEnabled() && Global::bullets.empty()) {
         fix_Btn1->setEnabled(false);
         fix_Btn1->setVisible(false);
         float currentHp = hp1->getPercentage();
@@ -526,7 +558,7 @@ void FireMaster::fix_Btn1_click(Ref * sender)
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && defence_Btn1->isEnabled()) {
+    if (Global::turn % 2 == 1 && defence_Btn1->isEnabled() && Global::bullets.empty()) {
         defence1->setVisible(true);
         defence_Btn1->runAction(FadeOut::create(0.5));
         defence_Btn1->setEnabled(false);
@@ -536,7 +568,7 @@ void FireMaster::defence_Btn1_click(Ref * sender)
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && triAttack_Btn1->isEnabled()) {
+    if (Global::turn % 2 == 1 && triAttack_Btn1->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn1->setEnabled(false);
         triAttack_Btn1->setVisible(false);
         triAttack_Btn1->runAction(FadeOut::create(0.5));
@@ -546,7 +578,7 @@ void FireMaster::triAttack_Btn1_click(Ref * sender)
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && powerBullet_Btn2->isEnabled()) {
+    if (Global::turn % 2 == 0 && powerBullet_Btn2->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
         powerBullet_Btn2->runAction(FadeOut::create(0.5));
@@ -556,7 +588,7 @@ void FireMaster::powerBullet_Btn2_click(Ref * sender)
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && fix_Btn2->isEnabled()) {
+    if (Global::turn % 2 == 0 && fix_Btn2->isEnabled() && Global::bullets.empty()) {
         fix_Btn2->setEnabled(false);
         fix_Btn2->setVisible(false);
         fix_Btn2->runAction(FadeOut::create(0.5));
@@ -568,7 +600,7 @@ void FireMaster::fix_Btn2_click(Ref * sender)
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && defence_Btn2->isEnabled()) {
+    if (Global::turn % 2 == 0 && defence_Btn2->isEnabled() && Global::bullets.empty()) {
         defence_Btn2->setEnabled(false);
         defence_Btn2->setVisible(false);
         defence2->setVisible(true);
@@ -578,7 +610,7 @@ void FireMaster::defence_Btn2_click(Ref * sender)
 void FireMaster::triAttack_Btn2_click(Ref * sender)
 {  
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0) {
+    if (Global::turn % 2 == 0 && triAttack_Btn2->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn2->setEnabled(false);
         triAttack_Btn2->setVisible(false);
         triAttack_Btn2->runAction(FadeOut::create(0.5));
