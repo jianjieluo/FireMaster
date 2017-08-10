@@ -5,6 +5,7 @@
 #include "Progress.h"
 #include "BlueTank.h"
 #include "YellowTank.h"
+#include "BaseTank.h"
 #include "ui/CocosGUI.h"
 
 using namespace std;
@@ -42,6 +43,8 @@ private:
 
     BlueTank *blueTank;
     YellowTank* yellowTank;
+	BaseTank* currTank;
+	
 
 	Sprite *obstacle;
 	Sprite *topUI;

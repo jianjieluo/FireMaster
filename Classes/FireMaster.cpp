@@ -47,6 +47,7 @@ bool FireMaster::init()
 	//add blue tank
 	blueTank = BlueTank::create();
 	this->addChild(blueTank, 1);
+	currTank = blueTank;
 
 
 	addSprite();
@@ -287,9 +288,11 @@ void FireMaster::nextTurn()
     // 设置信号量保证只有进入到下一个回合的时候另一个tank的信号量才允许点击
     if (side == 1) {
         blueTank->isInTurn = false;
+		currTank = yellowTank;
     }
     else {
         yellowTank->isInTurn = false;
+		currTank = blueTank;
     }
 	
 	//设置风向
@@ -622,7 +625,7 @@ void FireMaster::triAttack_Btn2_click(Ref * sender)
         triAttack_Btn2->setEnabled(false);
         triAttack_Btn2->setVisible(false);
         triAttack_Btn2->runAction(FadeOut::create(0.5));
-        yellowTank->setBulletCount(3);
+        yellowTank->BaseTank::setBulletCount(3);
     }
 }
 
