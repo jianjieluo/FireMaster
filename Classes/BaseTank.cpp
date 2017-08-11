@@ -138,7 +138,6 @@ void BaseTank::runAttack() {
     auto launch = CallFunc::create([&]() {
         // 在这里添加子弹生成,同时设置好物理的刚体属性，旋转发射角度，水平和垂直初速度等等，
         // 利用m_power设置好子弹的杀伤力。在FireMaster场景类里面进行调度检测碰撞。
-        // auto curr_bullet_hurt = (this->curr_bullet_name == "tank_bullet4.png") ? Global::bigBullet : m_basic_hurt;
         auto b = Bullet::create(this->curr_bullet_name, this->getBulletHurt());
         // 子弹相关位置,0是左边，1是右边
         if (this->getSide() == 0) {

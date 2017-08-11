@@ -560,7 +560,7 @@ void FireMaster::powerBullet_Btn1_click(Ref * sender)
     if (Global::turn % 2 == leftTank->getSide() && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
-        leftTank->setCurrBulletName("tank_bullet4.png");
+        leftTank->setCurrBulletName("powerAttackUI.png");
     }
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
@@ -602,7 +602,7 @@ void FireMaster::powerBullet_Btn2_click(Ref * sender)
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
         powerBullet_Btn2->runAction(FadeOut::create(0.5));
-        rightTank->setCurrBulletName("tank_bullet4.png");
+        rightTank->setCurrBulletName("powerAttackUI.png");
     }
 }
 void FireMaster::fix_Btn2_click(Ref * sender)

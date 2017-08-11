@@ -57,7 +57,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 void AppDelegate::loadGameResource() {
 	//¶¯»­
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist");
+    // you can add another plist here.
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("imges/FireMaster.plist", "imges/FireMaster.png");
 	char frameName[30];
 
 	//Ì¹¿Ë¹¥»÷¶¯»­
