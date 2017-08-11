@@ -290,6 +290,8 @@ void FireMaster::nextTurn()
     } else if (yellowTank->getSide() == Global::turn % 2) {
         currTank = yellowTank;
     }
+    // 只用当坦克不是在inturn的状态下才可以点击，这样是为了防止连续点击的情况出现
+    currTank->isInTurn = false;
 
 	//设置风向
 	refreshRandomWindPower();
@@ -371,7 +373,7 @@ void FireMaster::updateCollision(float ft)
 
         bool isCrashwithBg = m_checkingRects[0].intersectsRect(bbox) || m_checkingRects[1].intersectsRect(bbox)
             || m_checkingRects[2].intersectsRect(bbox) || m_checkingRects[3].intersectsRect(bbox);
-        bool isHitOpponent = (Global::turn % 2 == 1) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
+        bool isHitOpponent = (Global::turn % 2 == blueTank->getSide()) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
 
         if (isCrashwithBg || isHitOpponent) {
 			//爆炸音效

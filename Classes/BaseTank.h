@@ -9,6 +9,7 @@
 class BaseTank : public cocos2d::Sprite
 {
 public:
+    // 用来防止疯狂连按的
     bool isInTurn;
 
 public:

@@ -8,7 +8,9 @@ USING_NS_CC;
 using namespace CocosDenshion;
 using namespace cocos2d;
 
-BaseTank::BaseTank() {}
+BaseTank::BaseTank() {
+    isInTurn = false;
+}
 
 BaseTank::~BaseTank() {}
 
@@ -29,9 +31,10 @@ void BaseTank::addTouchListener()
 
         if (rect.containsPoint(p))
         {
-            if (Global::turn % 2 == this->getSide() && Global::bullets.empty()) {
+            if (Global::turn % 2 == this->getSide() && Global::bullets.empty() && !isInTurn ) {
                 m_power = 0;
                 m_istouch = true;//按钮按下
+                isInTurn = true;
                 this->schedule(schedule_selector(BaseTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
 				//按下取消等待计时器
