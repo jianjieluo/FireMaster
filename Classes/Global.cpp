@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int Global::turn = 0;
+int Global::turn = -1;
 bool Global::winSide = false;
 bool Global::isGameover = false;
 std::list<Bullet*> Global::bullets;

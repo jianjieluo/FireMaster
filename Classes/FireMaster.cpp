@@ -43,12 +43,12 @@ bool FireMaster::init()
 
 	//add yellow tank
 	yellowTank = YellowTank::create();
+	yellowTank->setSide(1);
 	this->addChild(yellowTank, 1);
 	//add blue tank
 	blueTank = BlueTank::create();
+	blueTank->setSide(0);
 	this->addChild(blueTank, 1);
-	currTank = blueTank;
-
 
 	addSprite();
     Global::bullets.clear();
@@ -283,18 +283,14 @@ void FireMaster::nextTurn()
 	if (Global::isGameover) return;
 
 	++Global::turn;
-	int side = Global::turn % 2;
 
-    // 设置信号量保证只有进入到下一个回合的时候另一个tank的信号量才允许点击
-    if (side == 1) {
-        blueTank->isInTurn = false;
-		currTank = yellowTank;
+	// 0是左边1是右边
+    if (blueTank->getSide() == Global::turn % 2) {
+        currTank = blueTank;
+    } else if (yellowTank->getSide() == Global::turn % 2) {
+        currTank = yellowTank;
     }
-    else {
-        yellowTank->isInTurn = false;
-		currTank = blueTank;
-    }
-	
+
 	//设置风向
 	refreshRandomWindPower();
 	CCString* ns = CCString::createWithFormat("windPower = %f", windPower);
@@ -314,7 +310,7 @@ void FireMaster::nextTurn()
 
 	waitClock->setPercentage(100);
 	//获取应放置的位置
-	Vec2 pos = side == 0 ? yellowTank->getPosition() : blueTank->getPosition();
+    Vec2 pos = currTank->getPosition();
 	waitClock->setPosition((Vec2(pos.x, pos.y + 100)));
 	waitClock->setVisible(true);
 }
@@ -324,7 +320,7 @@ void FireMaster::updateTurnUI(float ft)
 {
 	if (Global::isGameover) return;
     auto curr_turn = std::to_string(Global::turn);
-    auto side = ((Global::turn % 2) == 0) ? "right" : "left";
+    auto side = ((Global::turn % 2) == 0) ? "left" : "right";
     auto newstr = "Round:" + curr_turn + " " + side;
     //auto newstr = "Turn: 0";
     turnUI->setString(newstr);
@@ -548,7 +544,7 @@ void FireMaster::Gameover() {
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == blueTank->getSide() && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
         blueTank->setCurrBulletName("tank_bullet4.png");
@@ -557,7 +553,7 @@ void FireMaster::powerBullet_Btn1_click(Ref * sender)
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && fix_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == blueTank->getSide() && fix_Btn1->isEnabled() && Global::bullets.empty()) {
         fix_Btn1->setEnabled(false);
         fix_Btn1->setVisible(false);
         float currentHp = hp1->getPercentage();
@@ -569,7 +565,7 @@ void FireMaster::fix_Btn1_click(Ref * sender)
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && defence_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == blueTank->getSide() && defence_Btn1->isEnabled() && Global::bullets.empty()) {
         defence1->setVisible(true);
         defence_Btn1->runAction(FadeOut::create(0.5));
         defence_Btn1->setEnabled(false);
@@ -579,7 +575,7 @@ void FireMaster::defence_Btn1_click(Ref * sender)
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 1 && triAttack_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == blueTank->getSide() && triAttack_Btn1->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn1->setEnabled(false);
         triAttack_Btn1->setVisible(false);
         triAttack_Btn1->runAction(FadeOut::create(0.5));
@@ -589,7 +585,7 @@ void FireMaster::triAttack_Btn1_click(Ref * sender)
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && powerBullet_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == yellowTank->getSide() && powerBullet_Btn2->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
         powerBullet_Btn2->runAction(FadeOut::create(0.5));
@@ -599,7 +595,7 @@ void FireMaster::powerBullet_Btn2_click(Ref * sender)
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && fix_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == yellowTank->getSide() && fix_Btn2->isEnabled() && Global::bullets.empty()) {
         fix_Btn2->setEnabled(false);
         fix_Btn2->setVisible(false);
         fix_Btn2->runAction(FadeOut::create(0.5));
@@ -611,7 +607,7 @@ void FireMaster::fix_Btn2_click(Ref * sender)
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && defence_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == yellowTank->getSide() && defence_Btn2->isEnabled() && Global::bullets.empty()) {
         defence_Btn2->setEnabled(false);
         defence_Btn2->setVisible(false);
         defence2->setVisible(true);
@@ -621,11 +617,11 @@ void FireMaster::defence_Btn2_click(Ref * sender)
 void FireMaster::triAttack_Btn2_click(Ref * sender)
 {  
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == 0 && triAttack_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == yellowTank->getSide() && triAttack_Btn2->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn2->setEnabled(false);
         triAttack_Btn2->setVisible(false);
         triAttack_Btn2->runAction(FadeOut::create(0.5));
-        yellowTank->BaseTank::setBulletCount(3);
+        yellowTank->setBulletCount(3);
     }
 }
 
@@ -649,4 +645,3 @@ void FireMaster::timer(float a)
 		waitClock->setPercentage(m);
 	}
 }
-

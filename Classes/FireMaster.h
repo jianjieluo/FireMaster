@@ -44,7 +44,6 @@ private:
     BlueTank *blueTank;
     YellowTank* yellowTank;
 	BaseTank* currTank;
-	
 
 	Sprite *obstacle;
 	Sprite *topUI;

@@ -29,10 +29,9 @@ void BaseTank::addTouchListener()
 
         if (rect.containsPoint(p))
         {
-            if (Global::turn % 2 == 1 && Global::bullets.empty() && !isInTurn) {
+            if (Global::turn % 2 == this->getSide() && Global::bullets.empty()) {
                 m_power = 0;
                 m_istouch = true;//按钮按下
-                isInTurn = true;
                 this->schedule(schedule_selector(BaseTank::updatePowerbar), 0.1);//蓄力时间判断，每隔0.1秒调度一次
 
 				//按下取消等待计时器
@@ -142,10 +141,12 @@ void BaseTank::runAttack() {
         if (this->getSide() == 0) {
             b->setPosition(this->getPosition().x + 20, this->getPosition().y + 40);
             b->setRotation(-50.0f);
+            auto a = this->getBulletVelocity();
             b->getPhysicsBody()->setVelocity(this->getBulletVelocity());
         } else if (this->getSide() == 1) {
             b->setPosition(this->getPosition().x - 30, this->getPosition().y + 40);
             b->setRotation(230.0f);
+            auto a = this->getBulletVelocity();
             b->getPhysicsBody()->setVelocity(Vec2(-(this->getBulletVelocity().x), this->getBulletVelocity().y));
         }
 
