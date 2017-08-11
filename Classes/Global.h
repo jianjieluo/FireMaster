@@ -21,7 +21,6 @@ public:
 	// 按下的时候力度增长的速率
 	static float pressv;
 	static int windPower;
-
 };
 
 #endif

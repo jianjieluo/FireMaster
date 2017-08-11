@@ -2,15 +2,15 @@
 
 using namespace std;
 
-int Global::turn = 0;
+int Global::turn = -1;
 bool Global::winSide = false;
 bool Global::isGameover = false;
 std::list<Bullet*> Global::bullets;
 
-//全局参数设置
+//全锟街诧拷锟斤拷锟斤拷锟斤拷
 int Global::smallBullet = 15;
 int Global::bigBullet = 30;
-// 按下的时候力度增长的速率
+// 锟斤拷锟铰碉拷时锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 float Global::pressv = 1;
 int Global::windPower = 3;
 
