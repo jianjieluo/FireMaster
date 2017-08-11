@@ -49,8 +49,8 @@ protected:
 protected:
     virtual int getBulletHurt() const = 0;
     virtual Vec2 getBulletVelocity() const = 0;
-    virtual Animate getAttackAnimate() const = 0;
-    virtual Animate getAfterAttackAnimate() const = 0;
+    virtual Animate* getAttackAnimate() const = 0;
+    virtual Animate* getAfterAttackAnimate() const = 0;
 };
 
 #endif

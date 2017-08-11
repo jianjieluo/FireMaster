@@ -48,17 +48,17 @@ void BlueTank::setDefaultProperty()
 	this->setBulletCount(1);
 }
 
-int BlueTank::getBulletHurt() const override final {
+int BlueTank::getBulletHurt()  const {
     return (this->curr_bullet_name == "tank_bullet4.png") ? Global::bigBullet : Global::smallBullet;
 }
-Vec2 BlueTank::getBulletVelocity() const override final {
+Vec2 BlueTank::getBulletVelocity()  const {
     // 此处根据具体坦克的不同可以返回不同的值，在这里m_power其实已经没有太大的作用了
     // 注意，这里统一x，y均为整数，方向的不同已经在基类里面体现了
-    return Vec2(m_power * 25, m_power * 20)
+    return Vec2(m_power * 25, m_power * 20);
 }
-Animate BlueTank::getAttackAnimate() const override final {
+Animate* BlueTank::getAttackAnimate()  const {
     return Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
 }
-Animate BlueTank::getAfterAttackAnimate() const override final {
+Animate* BlueTank::getAfterAttackAnimate()  const {
     return Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAfterAttackAnimation"));
 }

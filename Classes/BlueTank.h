@@ -12,13 +12,13 @@ public:
     static BlueTank* create();
 
     // ��ʼ������������������Ϣ
-    void initOptions() override final;
-    virtual void setDefaultProperty() override final;
+    void initOptions();
+    virtual void setDefaultProperty();
 
-    virtual int getBulletHurt() const override final;
-    virtual Vec2 getBulletVelocity() const override final;
-    virtual Animate getAttackAnimate() const override final;
-    virtual Animate getAfterAttackAnimate() const override final;
+    virtual int getBulletHurt() const;
+    virtual Vec2 getBulletVelocity() const;
+    virtual Animate* getAttackAnimate() const;
+    virtual Animate* getAfterAttackAnimate() const;
 
 private:
     // 不同的坦克可以使用不同的子弹图片
