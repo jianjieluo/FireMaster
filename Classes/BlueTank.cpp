@@ -18,7 +18,6 @@ BlueTank* BlueTank::create()
     if (pSprite->initWithSpriteFrameName("blueAttack1.png"))
     {
         pSprite->autorelease();
-        pSprite->initOptions();
         pSprite->addEvents();
         return pSprite;
     }
@@ -26,20 +25,6 @@ BlueTank* BlueTank::create()
     CC_SAFE_DELETE(pSprite);
     return nullptr;
 }
-
-void BlueTank::initOptions()
-{
-    // do things here like setTag(), setPosition(), any custom logic.
-    auto tankScaleSize = 0.7;
-
-    this->setAnchorPoint(Point(0.5, 0.5));
-    this->setPosition(100, 100);
-    this->setScale(tankScaleSize);
-
-    this->setDefaultProperty();
-    isInTurn = false;
-}
-
 
 // 纯虚函数接口实现
 void BlueTank::setDefaultProperty()

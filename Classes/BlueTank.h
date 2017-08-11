@@ -12,7 +12,6 @@ public:
     static BlueTank* create();
 
     // ��ʼ������������������Ϣ
-    void initOptions();
     virtual void setDefaultProperty();
 
     virtual int getBulletHurt() const;

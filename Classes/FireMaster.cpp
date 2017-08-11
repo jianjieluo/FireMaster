@@ -41,22 +41,33 @@ bool FireMaster::init()
 	visibleSize = Director::getInstance()->getVisibleSize();
 	origin = Director::getInstance()->getVisibleOrigin();
 
-	//add yellow tank
-	yellowTank = YellowTank::create();
-	yellowTank->setSide(1);
-	this->addChild(yellowTank, 1);
-	//add blue tank
-	blueTank = BlueTank::create();
-	blueTank->setSide(0);
-	this->addChild(blueTank, 1);
+    auto tankScaleSize = 0.7;
+    //add left tank
+    leftTank = BlueTank::create();
+    leftTank->setSide(0);
+    leftTank->setAnchorPoint(Point(0.5, 0.5));
+    leftTank->setPosition(100, 100);
+    leftTank->setScale(tankScaleSize);
+    leftTank->setDefaultProperty();
+    this->addChild(leftTank, 1);
+    //add right tank
+	rightTank = YellowTank::create();
+	rightTank->setSide(1);
+    rightTank->setAnchorPoint(Point(0.5, 0.5));
+    rightTank->setPosition(Director::getInstance()->getVisibleSize().width - 100, 100);
+    rightTank->setScale(tankScaleSize);
+    rightTank->setFlipX(true);
+    rightTank->setDefaultProperty();
+	this->addChild(rightTank, 1);
+
 
 	addSprite();
     Global::bullets.clear();
 
-    m_checkingRects[4].setRect(yellowTank->getBoundingBox().origin.x, yellowTank->getBoundingBox().origin.y,
-        yellowTank->getBoundingBox().size.width, yellowTank->getBoundingBox().size.height - 40);
-    m_checkingRects[5].setRect(blueTank->getBoundingBox().origin.x, blueTank->getBoundingBox().origin.y,
-        blueTank->getBoundingBox().size.width, blueTank->getBoundingBox().size.height - 40);
+    m_checkingRects[4].setRect(rightTank->getBoundingBox().origin.x, rightTank->getBoundingBox().origin.y,
+        rightTank->getBoundingBox().size.width, rightTank->getBoundingBox().size.height - 40);
+    m_checkingRects[5].setRect(leftTank->getBoundingBox().origin.x, leftTank->getBoundingBox().origin.y,
+        leftTank->getBoundingBox().size.width, leftTank->getBoundingBox().size.height - 40);
 
     // draw debug rectangle
 #ifdef DEBUG
@@ -245,7 +256,7 @@ void FireMaster::addSprite() {
 	//添加defence1防护罩
 	defence1 = Sprite::createWithSpriteFrameName("defence.png");
 	defence1->setAnchorPoint(Point(0.5, 0.5));
-	defence1->setPosition(blueTank->getPosition().x, blueTank->getPosition().y + 10);
+	defence1->setPosition(leftTank->getPosition().x, leftTank->getPosition().y + 10);
 	defence1->setScale(1.5);
 	defence1->setVisible(false);
 	this->addChild(defence1, 2);
@@ -253,7 +264,7 @@ void FireMaster::addSprite() {
 	//添加defence2防护罩
 	defence2 = Sprite::createWithSpriteFrameName("defence.png");
 	defence2->setAnchorPoint(Point(0.5, 0.5));
-	defence2->setPosition(yellowTank->getPosition().x, yellowTank->getPosition().y + 10);
+	defence2->setPosition(rightTank->getPosition().x, rightTank->getPosition().y + 10);
 	defence2->setScale(1.5);
 	defence2->setVisible(false);
 	this->addChild(defence2, 2);
@@ -285,10 +296,10 @@ void FireMaster::nextTurn()
 	++Global::turn;
 
 	// 0是左边1是右边
-    if (blueTank->getSide() == Global::turn % 2) {
-        currTank = blueTank;
-    } else if (yellowTank->getSide() == Global::turn % 2) {
-        currTank = yellowTank;
+    if (leftTank->getSide() == Global::turn % 2) {
+        currTank = leftTank;
+    } else if (rightTank->getSide() == Global::turn % 2) {
+        currTank = rightTank;
     }
     // 只用当坦克不是在inturn的状态下才可以点击，这样是为了防止连续点击的情况出现
     currTank->isInTurn = false;
@@ -373,7 +384,7 @@ void FireMaster::updateCollision(float ft)
 
         bool isCrashwithBg = m_checkingRects[0].intersectsRect(bbox) || m_checkingRects[1].intersectsRect(bbox)
             || m_checkingRects[2].intersectsRect(bbox) || m_checkingRects[3].intersectsRect(bbox);
-        bool isHitOpponent = (Global::turn % 2 == blueTank->getSide()) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
+        bool isHitOpponent = (Global::turn % 2 == leftTank->getSide()) ? m_checkingRects[4].intersectsRect(bbox) : m_checkingRects[5].intersectsRect(bbox);
 
         if (isCrashwithBg || isHitOpponent) {
 			//爆炸音效
@@ -387,11 +398,11 @@ void FireMaster::updateCollision(float ft)
 			//炸到了yellowtank
 			if (m_checkingRects[4].intersectsRect(rect)) {
 				distance =sqrt(
-					pow(bpos.x - yellowTank->getPosition().x, 2)
-					+ pow(bpos.y - yellowTank->getPosition().y, 2)
+					pow(bpos.x - rightTank->getPosition().x, 2)
+					+ pow(bpos.y - rightTank->getPosition().y, 2)
 					);
 
-				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, yellowTank->getPosition().x, bpos.y, yellowTank->getPosition().y);
+				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, rightTank->getPosition().x, bpos.y, rightTank->getPosition().y);
 				CCLOG(ns->getCString());
 
 				float currentHp = hp2->getPercentage();
@@ -426,11 +437,11 @@ void FireMaster::updateCollision(float ft)
 			if (m_checkingRects[5].intersectsRect(rect)) {
 
 				distance = sqrt(
-					pow(bpos.x - blueTank->getPosition().x, 2)
-					+ pow(bpos.y - blueTank->getPosition().y, 2)
+					pow(bpos.x - leftTank->getPosition().x, 2)
+					+ pow(bpos.y - leftTank->getPosition().y, 2)
 				);
 
-				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, blueTank->getPosition().x, bpos.y, blueTank->getPosition().y);
+				CCString* ns = CCString::createWithFormat("bx = %f, tx = %f, by = %f, ty = %f", bpos.x, leftTank->getPosition().x, bpos.y, leftTank->getPosition().y);
 				CCLOG(ns->getCString());
 				
 
@@ -488,7 +499,7 @@ void FireMaster::updateCollision(float ft)
 //游戏结束
 void FireMaster::Gameover() {
 
-	auto pos = Global::winSide == 1 ? blueTank->getPosition() : yellowTank->getPosition();
+	auto pos = Global::winSide == 1 ? leftTank->getPosition() : rightTank->getPosition();
 
 	for (int i = 0; i < 3; ++i) {
 		booms[i] = Sprite::createWithSpriteFrameName("explosion1.png");
@@ -546,16 +557,16 @@ void FireMaster::Gameover() {
 void FireMaster::powerBullet_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == blueTank->getSide() && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == leftTank->getSide() && powerBullet_Btn1->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn1->setEnabled(false);
         powerBullet_Btn1->setVisible(false);
-        blueTank->setCurrBulletName("tank_bullet4.png");
+        leftTank->setCurrBulletName("tank_bullet4.png");
     }
 }
 void FireMaster::fix_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == blueTank->getSide() && fix_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == leftTank->getSide() && fix_Btn1->isEnabled() && Global::bullets.empty()) {
         fix_Btn1->setEnabled(false);
         fix_Btn1->setVisible(false);
         float currentHp = hp1->getPercentage();
@@ -567,7 +578,7 @@ void FireMaster::fix_Btn1_click(Ref * sender)
 void FireMaster::defence_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == blueTank->getSide() && defence_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == leftTank->getSide() && defence_Btn1->isEnabled() && Global::bullets.empty()) {
         defence1->setVisible(true);
         defence_Btn1->runAction(FadeOut::create(0.5));
         defence_Btn1->setEnabled(false);
@@ -577,27 +588,27 @@ void FireMaster::defence_Btn1_click(Ref * sender)
 void FireMaster::triAttack_Btn1_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == blueTank->getSide() && triAttack_Btn1->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == leftTank->getSide() && triAttack_Btn1->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn1->setEnabled(false);
         triAttack_Btn1->setVisible(false);
         triAttack_Btn1->runAction(FadeOut::create(0.5));
-        blueTank->setBulletCount(3);
+        leftTank->setBulletCount(3);
     }
 }
 void FireMaster::powerBullet_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == yellowTank->getSide() && powerBullet_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == rightTank->getSide() && powerBullet_Btn2->isEnabled() && Global::bullets.empty()) {
         powerBullet_Btn2->setEnabled(false);
         powerBullet_Btn2->setVisible(false);
         powerBullet_Btn2->runAction(FadeOut::create(0.5));
-        yellowTank->setCurrBulletName("tank_bullet4.png");
+        rightTank->setCurrBulletName("tank_bullet4.png");
     }
 }
 void FireMaster::fix_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == yellowTank->getSide() && fix_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == rightTank->getSide() && fix_Btn2->isEnabled() && Global::bullets.empty()) {
         fix_Btn2->setEnabled(false);
         fix_Btn2->setVisible(false);
         fix_Btn2->runAction(FadeOut::create(0.5));
@@ -609,7 +620,7 @@ void FireMaster::fix_Btn2_click(Ref * sender)
 void FireMaster::defence_Btn2_click(Ref * sender)
 {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == yellowTank->getSide() && defence_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == rightTank->getSide() && defence_Btn2->isEnabled() && Global::bullets.empty()) {
         defence_Btn2->setEnabled(false);
         defence_Btn2->setVisible(false);
         defence2->setVisible(true);
@@ -619,11 +630,11 @@ void FireMaster::defence_Btn2_click(Ref * sender)
 void FireMaster::triAttack_Btn2_click(Ref * sender)
 {  
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav");
-    if (Global::turn % 2 == yellowTank->getSide() && triAttack_Btn2->isEnabled() && Global::bullets.empty()) {
+    if (Global::turn % 2 == rightTank->getSide() && triAttack_Btn2->isEnabled() && Global::bullets.empty()) {
         triAttack_Btn2->setEnabled(false);
         triAttack_Btn2->setVisible(false);
         triAttack_Btn2->runAction(FadeOut::create(0.5));
-        yellowTank->setBulletCount(3);
+        rightTank->setBulletCount(3);
     }
 }
 

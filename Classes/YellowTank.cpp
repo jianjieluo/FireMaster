@@ -19,27 +19,12 @@ YellowTank* YellowTank::create()
     if (pSprite->initWithSpriteFrameName("yellowAttack1.png"))
     {
         pSprite->autorelease();
-        pSprite->initOptions();
         pSprite->addEvents();
         return pSprite;
     }
 
     CC_SAFE_DELETE(pSprite);
     return nullptr;
-}
-
-void YellowTank::initOptions()
-{
-    // do things here like setTag(), setPosition(), any custom logic.
-    auto tankScaleSize = 0.7;
-
-    this->setAnchorPoint(Point(0.5, 0.5));
-    this->setPosition(Director::getInstance()->getVisibleSize().width - 100, 100);
-    this->setScale(tankScaleSize);
-    this->setFlipX(true);
-
-    this->setDefaultProperty();
-    isInTurn = false;
 }
 
 void YellowTank::setDefaultProperty()

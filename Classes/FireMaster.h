@@ -41,8 +41,8 @@ private:
     Size visibleSize;
     Vec2 origin;
 
-    BlueTank *blueTank;
-    YellowTank* yellowTank;
+    BlueTank *leftTank;
+    YellowTank* rightTank;
 	BaseTank* currTank;
 
 	Sprite *obstacle;

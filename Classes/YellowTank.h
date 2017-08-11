@@ -10,7 +10,6 @@ public:
     static YellowTank* create();
 
     // ��ʼ������������������Ϣ
-    void initOptions();
     virtual void setDefaultProperty();
 
     virtual int getBulletHurt() const;
