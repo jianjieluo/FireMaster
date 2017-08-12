@@ -21,6 +21,8 @@ public:
 	// 按下的时候力度增长的速率
 	static float pressv;
 	static int windPower;
+    // Tank types enum class , used to choose different type tank before the game start.
+    static const enum class TankType { blue, yellow };
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
 #include "introductionPage.h"
+#include "ChoosePlayerScene.h"
 
 using namespace CocosDenshion;
 USING_NS_CC;
@@ -66,7 +67,7 @@ bool initScene::init()
 
 void initScene::StartBtn_click(Ref * sender) {
     SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, FireMaster::createScene()));
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, choosePlayerScene::createScene()));
 }
 
 void initScene::introductionBtn_click(Ref* sender) {

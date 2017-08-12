@@ -1,5 +1,6 @@
 #include "replayView.h"
 #include "FireMaster.h"
+#include "ChoosePlayerScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
@@ -68,5 +69,5 @@ void replayView::ReplayBtn_click(Ref * sender) {
 	Global::bullets.clear();
 	Global::isGameover = false;
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, FireMaster::createScene()));
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, choosePlayerScene::createScene()));
 }

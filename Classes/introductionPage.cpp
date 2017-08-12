@@ -1,5 +1,6 @@
 #include "introductionPage.h"
 #include "FireMaster.h"
+#include "ChoosePlayerScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
@@ -54,5 +55,5 @@ bool introductionPage::init()
 
 void introductionPage::StartBtn_click(Ref * sender) {
 	SimpleAudioEngine::getInstance()->playEffect("music/click.wav", false);
-	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, FireMaster::createScene()));
+	Director::getInstance()->replaceScene(TransitionCrossFade::create(0.8f, choosePlayerScene::createScene()));
 }
