@@ -18,6 +18,7 @@ public:
     virtual Vec2 getBulletVelocity() const;
     virtual Animate* getAttackAnimate() const;
     virtual Animate* getAfterAttackAnimate() const;
+    virtual const Rect getTankBoundingBox() const;
 
 private:
     // 不同的坦克可以使用不同的子弹图片

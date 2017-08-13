@@ -47,3 +47,8 @@ Animate* YellowTank::getAttackAnimate()  const {
 Animate* YellowTank::getAfterAttackAnimate()  const {
     return Animate::create(AnimationCache::getInstance()->getAnimation("yellowTankAfterAttackAnimation"));
 }
+const Rect YellowTank::getTankBoundingBox() const {
+    return Rect(this->getBoundingBox().origin.x, this->getBoundingBox().origin.y,
+        this->getBoundingBox().size.width,
+        this->getBoundingBox().size.height - 40);
+}

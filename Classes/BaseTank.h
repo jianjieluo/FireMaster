@@ -27,6 +27,7 @@ public:
     void runAttack();
     // 不同的坦克涉及到不同的属性，所以在这里作为纯虚函数，所有的都需要显式实现
     virtual void setDefaultProperty() = 0;
+    virtual const Rect getTankBoundingBox() const = 0;
 
     void setCurrBulletName(const std::string & t_name);
     void setBulletCount(const int n);
@@ -52,6 +53,7 @@ protected:
     virtual Vec2 getBulletVelocity() const = 0;
     virtual Animate* getAttackAnimate() const = 0;
     virtual Animate* getAfterAttackAnimate() const = 0;
+
 };
 
 #endif

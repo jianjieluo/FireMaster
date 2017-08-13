@@ -74,7 +74,7 @@ class FireMaster : public Layer {
   int m_turn;
   cocos2d::Label* turnUI;
 
-  Rect m_checkingRects[6];
+  Rect m_checkingRects[4];
 
   Progress *hp1, *hp2;
 };

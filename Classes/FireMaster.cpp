@@ -107,14 +107,14 @@ bool FireMaster::initWithTwoTankType(const Global::TankType leftTankType,
   addSprite();
   Global::bullets.clear();
 
-  m_checkingRects[4].setRect(rightTank->getBoundingBox().origin.x,
-                             rightTank->getBoundingBox().origin.y,
-                             rightTank->getBoundingBox().size.width,
-                             rightTank->getBoundingBox().size.height - 40);
-  m_checkingRects[5].setRect(leftTank->getBoundingBox().origin.x,
-                             leftTank->getBoundingBox().origin.y,
-                             leftTank->getBoundingBox().size.width,
-                             leftTank->getBoundingBox().size.height - 40);
+  // m_checkingRects[4].setRect(rightTank->getBoundingBox().origin.x,
+  //                            rightTank->getBoundingBox().origin.y,
+  //                            rightTank->getBoundingBox().size.width,
+  //                            rightTank->getBoundingBox().size.height - 40);
+  // m_checkingRects[5].setRect(leftTank->getBoundingBox().origin.x,
+  //                            leftTank->getBoundingBox().origin.y,
+  //                            leftTank->getBoundingBox().size.width,
+  //                            leftTank->getBoundingBox().size.height - 40);
 
 // draw debug rectangle
 #ifdef DEBUG
@@ -143,15 +143,16 @@ bool FireMaster::initWithTwoTankType(const Global::TankType leftTankType,
                    m_checkingRects[3].origin + m_checkingRects[3].size, white);
   this->addChild(ground, 2);
 
-  auto ytank = DrawNode::create();
-  ytank->drawRect(m_checkingRects[4].origin,
-                  m_checkingRects[4].origin + m_checkingRects[4].size, white);
-  this->addChild(ytank, 2);
+  auto rtank = DrawNode::create();
+  auto r = rightTank->getTankBoundingBox();
+  rtank->drawRect(r.origin,
+                  r.origin + r.size, white);
+  this->addChild(rtank, 2);
 
-  auto btank = DrawNode::create();
-  btank->drawRect(m_checkingRects[5].origin,
-                  m_checkingRects[5].origin + m_checkingRects[5].size, white);
-  this->addChild(btank, 2);
+  auto ltank = DrawNode::create();
+  auto l = leftTank->getTankBoundingBox();
+  ltank->drawRect(l.origin, l.origin + l.size, white);
+  this->addChild(ltank, 2);
 #endif
 
   //添加调度器
@@ -468,8 +469,8 @@ void FireMaster::updateCollision(float ft) {
                          m_checkingRects[2].intersectsRect(bbox) ||
                          m_checkingRects[3].intersectsRect(bbox);
     bool isHitOpponent = (Global::turn % 2 == leftTank->getSide())
-                             ? m_checkingRects[4].intersectsRect(bbox)
-                             : m_checkingRects[5].intersectsRect(bbox);
+                             ? rightTank->getTankBoundingBox().intersectsRect(bbox)
+                             : leftTank->getTankBoundingBox().intersectsRect(bbox);
 
     if (isCrashwithBg || isHitOpponent) {
       //爆炸音效
@@ -480,8 +481,8 @@ void FireMaster::updateCollision(float ft) {
       //判断子弹和坦克中心点距离
       float distance;
 
-      //炸到了yellowtank
-      if (m_checkingRects[4].intersectsRect(rect)) {
+      //炸到了righttank
+      if (rightTank->getTankBoundingBox().intersectsRect(rect)) {
         distance = sqrt(pow(bpos.x - rightTank->getPosition().x, 2) +
                         pow(bpos.y - rightTank->getPosition().y, 2));
 
@@ -518,8 +519,8 @@ void FireMaster::updateCollision(float ft) {
         }
       }
 
-      //炸到了bluetank
-      if (m_checkingRects[5].intersectsRect(rect)) {
+      //炸到了lefttank
+      if (leftTank->getTankBoundingBox().intersectsRect(rect)) {
         distance = sqrt(pow(bpos.x - leftTank->getPosition().x, 2) +
                         pow(bpos.y - leftTank->getPosition().y, 2));
 
