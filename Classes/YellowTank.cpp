@@ -34,7 +34,7 @@ void YellowTank::setDefaultProperty()
 }
 
 int YellowTank::getBulletHurt()  const {
-    return (this->curr_bullet_name == "tank_bullet4.png") ? Global::bigBullet : Global::smallBullet;
+    return (this->curr_bullet_name == "powerAttackUI.png") ? Global::bigBullet : Global::smallBullet;
 }
 Vec2 YellowTank::getBulletVelocity()  const {
     // 此处根据具体坦克的不同可以返回不同的值，在这里m_power其实已经没有太大的作用了
