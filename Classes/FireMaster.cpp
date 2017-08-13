@@ -50,7 +50,6 @@ FireMaster *FireMaster::create(const Global::TankType leftTankType,
   }
 }
 
-// on "init" you need to initialize your instance
 bool FireMaster::initWithTwoTankType(const Global::TankType leftTankType,
                                      const Global::TankType rightTankType) {
   // super init first
@@ -106,15 +105,6 @@ bool FireMaster::initWithTwoTankType(const Global::TankType leftTankType,
 
   addSprite();
   Global::bullets.clear();
-
-  // m_checkingRects[4].setRect(rightTank->getBoundingBox().origin.x,
-  //                            rightTank->getBoundingBox().origin.y,
-  //                            rightTank->getBoundingBox().size.width,
-  //                            rightTank->getBoundingBox().size.height - 40);
-  // m_checkingRects[5].setRect(leftTank->getBoundingBox().origin.x,
-  //                            leftTank->getBoundingBox().origin.y,
-  //                            leftTank->getBoundingBox().size.width,
-  //                            leftTank->getBoundingBox().size.height - 40);
 
 // draw debug rectangle
 #ifdef DEBUG
