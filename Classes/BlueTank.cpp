@@ -11,39 +11,44 @@ BlueTank::BlueTank() {}
 
 BlueTank::~BlueTank() {}
 
-BlueTank* BlueTank::create()
-{
-    BlueTank* pSprite = new BlueTank();
+BlueTank* BlueTank::create() {
+  BlueTank* pSprite = new BlueTank();
 
-    if (pSprite->initWithSpriteFrameName("blueAttack1.png"))
-    {
-        pSprite->autorelease();
-        pSprite->addEvents();
-        return pSprite;
-    }
+  if (pSprite->initWithSpriteFrameName("blueAttack1.png")) {
+    pSprite->autorelease();
+    pSprite->addEvents();
+    return pSprite;
+  }
 
-    CC_SAFE_DELETE(pSprite);
-    return nullptr;
+  CC_SAFE_DELETE(pSprite);
+  return nullptr;
 }
 
 // 纯虚函数接口实现
-void BlueTank::setDefaultProperty()
-{
-    this->setCurrBulletName(default_bullet_name);
-	this->setBulletCount(1);
+void BlueTank::setDefaultProperty() {
+  this->setCurrBulletName(default_bullet_name);
+  this->setBulletCount(1);
 }
 
-int BlueTank::getBulletHurt()  const {
-    return (this->curr_bullet_name == "tank_bullet4.png") ? Global::bigBullet : Global::smallBullet;
+int BlueTank::getBulletHurt() const {
+  return (this->curr_bullet_name == "powerAttackUI.png") ? Global::bigBullet
+                                                         : Global::smallBullet;
 }
-Vec2 BlueTank::getBulletVelocity()  const {
-    // 此处根据具体坦克的不同可以返回不同的值
-    // 注意，这里统一x，y均为整数，方向的不同已经在基类里面体现了
-    return Vec2(m_power * 25, m_power * 20);
+Vec2 BlueTank::getBulletVelocity() const {
+  // 此处根据具体坦克的不同可以返回不同的值
+  // 注意，这里统一x，y均为整数，方向的不同已经在基类里面体现了
+  return Vec2(m_power * 25, m_power * 20);
 }
-Animate* BlueTank::getAttackAnimate()  const {
-    return Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
+Animate* BlueTank::getAttackAnimate() const {
+  return Animate::create(
+      AnimationCache::getInstance()->getAnimation("blueTankAttackAnimation"));
 }
-Animate* BlueTank::getAfterAttackAnimate()  const {
-    return Animate::create(AnimationCache::getInstance()->getAnimation("blueTankAfterAttackAnimation"));
+Animate* BlueTank::getAfterAttackAnimate() const {
+  return Animate::create(AnimationCache::getInstance()->getAnimation(
+      "blueTankAfterAttackAnimation"));
+}
+const Rect BlueTank::getTankBoundingBox() const {
+  return Rect(this->getBoundingBox().origin.x, this->getBoundingBox().origin.y,
+              this->getBoundingBox().size.width,
+              this->getBoundingBox().size.height - 40);
 }
