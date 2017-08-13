@@ -14,12 +14,6 @@ int Global::bigBullet = 30;
 float Global::pressv = 1;
 int Global::windPower = 3;
 
-Global::Global()
-{
-}
+Global::Global() {}
 
-Global::~Global()
-{
-}
-
-
+Global::~Global() {}

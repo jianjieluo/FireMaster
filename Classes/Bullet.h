@@ -2,19 +2,18 @@
 
 #include "cocos2d.h"
 
-class Bullet : public cocos2d::Sprite
-{
-public:
-    Bullet();
-    ~Bullet();
-    static Bullet* create(const std::string &filename, int t_hurt);
+class Bullet : public cocos2d::Sprite {
+ public:
+  Bullet();
+  ~Bullet();
+  static Bullet* create(const std::string& filename, int t_hurt);
 
-    void initOptions();
+  void initOptions();
 
-    // 基本操作
-    int getHurtness() const;
-    void setHurtness(const int t_hurt);
+  // 基本操作
+  int getHurtness() const;
+  void setHurtness(const int t_hurt);
 
-private:
-    int m_hurt;
+ private:
+  int m_hurt;
 };

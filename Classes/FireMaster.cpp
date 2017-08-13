@@ -135,8 +135,7 @@ bool FireMaster::initWithTwoTankType(const Global::TankType leftTankType,
 
   auto rtank = DrawNode::create();
   auto r = rightTank->getTankBoundingBox();
-  rtank->drawRect(r.origin,
-                  r.origin + r.size, white);
+  rtank->drawRect(r.origin, r.origin + r.size, white);
   this->addChild(rtank, 2);
 
   auto ltank = DrawNode::create();
@@ -458,9 +457,10 @@ void FireMaster::updateCollision(float ft) {
                          m_checkingRects[1].intersectsRect(bbox) ||
                          m_checkingRects[2].intersectsRect(bbox) ||
                          m_checkingRects[3].intersectsRect(bbox);
-    bool isHitOpponent = (Global::turn % 2 == leftTank->getSide())
-                             ? rightTank->getTankBoundingBox().intersectsRect(bbox)
-                             : leftTank->getTankBoundingBox().intersectsRect(bbox);
+    bool isHitOpponent =
+        (Global::turn % 2 == leftTank->getSide())
+            ? rightTank->getTankBoundingBox().intersectsRect(bbox)
+            : leftTank->getTankBoundingBox().intersectsRect(bbox);
 
     if (isCrashwithBg || isHitOpponent) {
       //爆炸音效

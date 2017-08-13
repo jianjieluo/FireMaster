@@ -31,10 +31,12 @@ bool choosePlayerScene::init() {
     return false;
   }
 
-  //EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
-  //listener->setSwallowTouches(true);
-  //listener->onTouchBegan = CC_CALLBACK_2(choosePlayerScene::onTouchBegan, this);
-  //Director::getInstance()
+  // EventListenerTouchOneByOne* listener =
+  // EventListenerTouchOneByOne::create();
+  // listener->setSwallowTouches(true);
+  // listener->onTouchBegan = CC_CALLBACK_2(choosePlayerScene::onTouchBegan,
+  // this);
+  // Director::getInstance()
   //    ->getEventDispatcher()
   //    ->addEventListenerWithSceneGraphPriority(listener, this);
 
@@ -75,12 +77,16 @@ bool choosePlayerScene::init() {
   currTankType = Global::TankType::none;
 
   // add reminder
-  tipsUI = Label::createWithTTF("Choose a tank for left position,\n then click ok to confirm", "fonts/arial.ttf", 28);
+  tipsUI = Label::createWithTTF(
+      "Choose a tank for left position,\n then click ok to confirm",
+      "fonts/arial.ttf", 28);
   tipsUI->setAnchorPoint(Point(0.5, 0.5));
   tipsUI->setPosition(visibleSize.width / 2, visibleSize.height - 180);
   this->addChild(tipsUI, 1);
 
-  detailUI = Label::createWithTTF("You need to choose a specific tank and get its details", "fonts/arial.ttf", 28);
+  detailUI = Label::createWithTTF(
+      "You need to choose a specific tank and get its details",
+      "fonts/arial.ttf", 28);
   detailUI->setAnchorPoint(Point(0.5, 0.5));
   detailUI->setPosition(visibleSize.width / 2, visibleSize.height - 250);
   this->addChild(detailUI, 1);
